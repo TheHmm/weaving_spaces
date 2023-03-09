@@ -23,11 +23,6 @@ defmodule KnitMakerWeb.Router do
     get "/", PageController, :home
   end
 
-  # Other scopes may use custom stacks.
-  # scope "/api", KnitMakerWeb do
-  #   pipe_through :api
-  # end
-
   ## Authentication routes
 
   scope "/", KnitMakerWeb do
@@ -49,13 +44,21 @@ defmodule KnitMakerWeb.Router do
 
     live_session :require_authenticated_user,
       on_mount: [{KnitMakerWeb.UserAuth, :ensure_authenticated}] do
-      live "/events", EventLive.Index, :index
-      live "/events/new", EventLive.Index, :new
       live "/events/:id", EventLive.Show, :show
-      live "/events/:id/edit", EventLive.Show, :edit
-
       live "/users/settings", UserSettingsLive, :edit
       live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
+    end
+  end
+
+  # admin routes
+  scope "/", KnitMakerWeb do
+    pipe_through [:browser, :require_admin_user]
+
+    live_session :require_admin_user,
+      on_mount: [{KnitMakerWeb.UserAuth, :ensure_authenticated}] do
+      live "/events", EventLive.Index, :index
+      live "/events/new", EventLive.Index, :new
+      live "/events/:id/edit", EventLive.Show, :edit
     end
   end
 
