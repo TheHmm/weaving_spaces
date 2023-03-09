@@ -26,6 +26,7 @@ defmodule KnitMakerWeb.EventLive.Show do
   end
 
   defp page_title(:show), do: "Show Event"
+  defp page_title(:questions), do: "Show Event questions"
   defp page_title(:edit), do: "Edit Event"
   defp page_title(:add_question), do: "Add new Question"
   defp page_title(:edit_question), do: "Edit Question"

@@ -1,6 +1,6 @@
 <.header>
-  Event <%= @event.id %>
-  <:subtitle>This is a event record from your database.</:subtitle>
+  Event: <%= @event.name %>
+
   <:actions>
     <.link patch={~p"/events/#{@event}/edit"} phx-click={JS.push_focus()}>
       <.button>Edit event</.button>
@@ -8,7 +8,16 @@
   </:actions>
 </.header>
 
-<div class="mb-4">
+<.tab_bar>
+  <:tab title="Properties" selected={@live_action == :show} link_to={~p"/events/#{@event}"} />
+  <:tab
+    title="Questions"
+    selected={@live_action in [:questions, :add_question]}
+    link_to={~p"/events/#{@event}/questions"}
+  />
+</.tab_bar>
+
+<div :if={@live_action == :show} class="mb-4">
   <.list>
     <:item title="Slug"><%= @event.slug %></:item>
     <:item title="Name"><%= @event.name %></:item>
@@ -17,23 +26,22 @@
   </.list>
 </div>
 
-<div class="mb-4">
-  <.header>Questions</.header>
-
-  <.table
-    rows={@questions}
-    id="questions"
-    row_click={fn q -> JS.navigate(~p"/events/#{@event}/question/#{q}/edit") end}
-  >
-    <:col :let={q} label="Rank"><%= q.rank %></:col>
-    <:col :let={q} label="Question"><%= q.title %></:col>
-    <:col :let={q} label="Type"><%= q.type %></:col>
-  </.table>
+<div :if={@live_action in [:questions, :add_question]} class="mb-4">
+  <div class="mb-4">
+    <.table
+      rows={@questions}
+      id="questions"
+      row_click={fn q -> JS.navigate(~p"/events/#{@event}/question/#{q}/edit") end}
+    >
+      <:col :let={q} label="Rank"><%= q.rank %></:col>
+      <:col :let={q} label="Question"><%= q.title %></:col>
+      <:col :let={q} label="Type"><%= q.type %></:col>
+    </.table>
+  </div>
+  <.link patch={~p"/events/#{@event}/question/add"}>
+    <.button>Add question</.button>
+  </.link>
 </div>
-
-<.link patch={~p"/events/#{@event}/question/add"}>
-  <.button>Add question</.button>
-</.link>
 
 <.back navigate={~p"/events"}>Back to events</.back>
 
@@ -57,7 +65,7 @@
   :if={@live_action in [:edit_question, :config_question]}
   id="event-modal"
   show
-  on_cancel={JS.patch(~p"/events/#{@event}")}
+  on_cancel={JS.patch(~p"/events/#{@event}/questions")}
 >
   <.live_component
     module={KnitMakerWeb.QuestionLive.FormComponent}
@@ -74,7 +82,7 @@
   :if={@live_action == :add_question}
   id="event-modal"
   show
-  on_cancel={JS.patch(~p"/events/#{@event}")}
+  on_cancel={JS.patch(~p"/events/#{@event}/questions")}
 >
   <.live_component
     module={KnitMakerWeb.QuestionLive.FormComponent}

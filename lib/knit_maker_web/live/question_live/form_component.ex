@@ -17,12 +17,12 @@ defmodule KnitMakerWeb.QuestionLive.FormComponent do
           <:tab
             title="Properties"
             selected={@action == :edit_question}
-            click={fn -> JS.navigate(~p"/events/#{@event}/question/#{@question}/edit") end}
+            link_to={~p"/events/#{@event}/question/#{@question}/edit"}
           />
           <:tab
             title="Configuration"
             selected={@action == :config_question}
-            click={fn -> JS.navigate(~p"/events/#{@event}/question/#{@question}/config") end}
+            link_to={~p"/events/#{@event}/question/#{@question}/config"}
           />
         </.tab_bar>
       <% end %>

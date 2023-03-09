@@ -676,8 +676,8 @@ defmodule KnitMakerWeb.CoreComponents do
   """
   slot :tab, required: true do
     attr :title, :string, required: true
+    attr :link_to, :any, required: true
     attr :selected, :boolean
-    attr :click, :any, doc: "the function for handling phx-click on the tab"
   end
 
   def tab_bar(assigns) do
@@ -698,7 +698,7 @@ defmodule KnitMakerWeb.CoreComponents do
         <li :for={tab <- @tab} class="mr-2">
           <a
             href="#"
-            phx-click={tab[:click] && tab.click.()}
+            phx-click={JS.navigate(tab.link_to)}
             class={"inline-block p-4 rounded-t-lg border-transparent" <> @selected_class[!!tab[:selected]]}
           >
             <%= tab.title %>
