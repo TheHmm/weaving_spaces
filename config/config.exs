@@ -20,6 +20,8 @@ config :knit_maker, KnitMakerWeb.Endpoint,
   pubsub_server: KnitMaker.PubSub,
   live_view: [signing_salt: "5hSW97ek"]
 
+config :knit_maker, KnitMaker.Mailer, adapter: Swoosh.Adapters.Local
+
 # Configure esbuild (the version is required)
 config :esbuild,
   version: "0.14.41",
