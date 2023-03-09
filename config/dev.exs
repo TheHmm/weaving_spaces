@@ -19,6 +19,8 @@ config :knit_maker, KnitMakerWeb.Endpoint,
     tailwind: {Tailwind, :install_and_run, [:default, ~w(--watch)]}
   ]
 
+config :knit_maker, KnitMaker.Repo, database: "knit_maker.db"
+
 # ## SSL Support
 #
 # In order to use HTTPS in development, a self-signed

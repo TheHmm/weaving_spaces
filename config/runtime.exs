@@ -1,10 +1,7 @@
 import Config
 
-config :knit_maker, KnitMaker.Repo,
-  # ssl: true,
-  database: System.get_env("KNITMAKER_DB", "knit_maker.db")
-
 if config_env() == :prod do
+  config :knit_maker, KnitMaker.Repo, database: System.get_env("KNITMAKER_DB", "knit_maker.db")
   config :knit_maker, KnitMakerWeb.Endpoint, server: true
 
   # The secret key base is used to sign/encrypt cookies and other secrets.
