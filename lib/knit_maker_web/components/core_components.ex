@@ -681,11 +681,16 @@ defmodule KnitMakerWeb.CoreComponents do
   end
 
   def tab_bar(assigns) do
-    selected_class = %{
-      false => "hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300",
-      true =>
-        "text-blue-600 border-blue-600 active dark:text-blue-500 dark:border-blue-500 border-b-2"
-    }
+    assigns =
+      assign(
+        assigns,
+        :selected_class,
+        %{
+          false => "hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300",
+          true =>
+            "text-blue-600 border-blue-600 active dark:text-blue-500 dark:border-blue-500 border-b-2"
+        }
+      )
 
     ~H"""
     <div class="text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700">
@@ -694,7 +699,7 @@ defmodule KnitMakerWeb.CoreComponents do
           <a
             href="#"
             phx-click={tab[:click] && tab.click.()}
-            class={"inline-block p-4 rounded-t-lg border-transparent" <> selected_class[!!tab[:selected]]}
+            class={"inline-block p-4 rounded-t-lg border-transparent" <> @selected_class[!!tab[:selected]]}
           >
             <%= tab.title %>
           </a>
