@@ -61,4 +61,9 @@ defmodule KnitMakerWeb.ConnCase do
     |> Phoenix.ConnTest.init_test_session(%{})
     |> Plug.Conn.put_session(:user_token, token)
   end
+
+  def create_and_log_in_admin(%{conn: conn}) do
+    admin = KnitMaker.AccountsFixtures.user_fixture(%{is_admin: true})
+    %{conn: log_in_user(conn, admin), user: admin}
+  end
 end

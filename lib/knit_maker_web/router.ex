@@ -39,17 +39,6 @@ defmodule KnitMakerWeb.Router do
     post "/users/log_in", UserSessionController, :create
   end
 
-  scope "/", KnitMakerWeb do
-    pipe_through [:browser, :require_authenticated_user]
-
-    live_session :require_authenticated_user,
-      on_mount: [{KnitMakerWeb.UserAuth, :ensure_authenticated}] do
-      live "/events/:id", EventLive.Show, :show
-      live "/users/settings", UserSettingsLive, :edit
-      live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
-    end
-  end
-
   # admin routes
   scope "/", KnitMakerWeb do
     pipe_through [:browser, :require_admin_user]
@@ -59,6 +48,18 @@ defmodule KnitMakerWeb.Router do
       live "/events", EventLive.Index, :index
       live "/events/new", EventLive.Index, :new
       live "/events/:id/edit", EventLive.Show, :edit
+    end
+  end
+
+  # authenticated routes
+  scope "/", KnitMakerWeb do
+    pipe_through [:browser, :require_authenticated_user]
+
+    live_session :require_authenticated_user,
+      on_mount: [{KnitMakerWeb.UserAuth, :ensure_authenticated}] do
+      live "/events/:id", EventLive.Show, :show
+      live "/users/settings", UserSettingsLive, :edit
+      live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
     end
   end
 

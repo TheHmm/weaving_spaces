@@ -4,7 +4,7 @@ defmodule KnitMakerWeb.EventLiveTest do
   import Phoenix.LiveViewTest
   import KnitMaker.EventsFixtures
 
-  setup :register_and_log_in_user
+  setup :create_and_log_in_admin
 
   @create_attrs %{
     slug: "some-slug",

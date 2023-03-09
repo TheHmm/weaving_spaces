@@ -70,4 +70,68 @@ defmodule KnitMaker.EventsTest do
       assert %Ecto.Changeset{} = Events.change_event(event)
     end
   end
+
+  describe "questions" do
+    alias KnitMaker.Events.Question
+
+    import KnitMaker.EventsFixtures
+
+    @invalid_attrs %{code: nil, config: nil, description: nil, rank: nil, title: nil, type: nil}
+
+    test "list_questions/0 returns all questions" do
+      question = question_fixture()
+      assert Events.list_questions() == [question]
+    end
+
+    test "get_question!/1 returns the question with given id" do
+      question = question_fixture()
+      assert Events.get_question!(question.id) == question
+    end
+
+    test "create_question/1 with valid data creates a question" do
+      valid_attrs = %{code: "some code", config: %{}, description: "some description", rank: 42, title: "some title", type: "some type"}
+
+      assert {:ok, %Question{} = question} = Events.create_question(valid_attrs)
+      assert question.code == "some code"
+      assert question.config == %{}
+      assert question.description == "some description"
+      assert question.rank == 42
+      assert question.title == "some title"
+      assert question.type == "some type"
+    end
+
+    test "create_question/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Events.create_question(@invalid_attrs)
+    end
+
+    test "update_question/2 with valid data updates the question" do
+      question = question_fixture()
+      update_attrs = %{code: "some updated code", config: %{}, description: "some updated description", rank: 43, title: "some updated title", type: "some updated type"}
+
+      assert {:ok, %Question{} = question} = Events.update_question(question, update_attrs)
+      assert question.code == "some updated code"
+      assert question.config == %{}
+      assert question.description == "some updated description"
+      assert question.rank == 43
+      assert question.title == "some updated title"
+      assert question.type == "some updated type"
+    end
+
+    test "update_question/2 with invalid data returns error changeset" do
+      question = question_fixture()
+      assert {:error, %Ecto.Changeset{}} = Events.update_question(question, @invalid_attrs)
+      assert question == Events.get_question!(question.id)
+    end
+
+    test "delete_question/1 deletes the question" do
+      question = question_fixture()
+      assert {:ok, %Question{}} = Events.delete_question(question)
+      assert_raise Ecto.NoResultsError, fn -> Events.get_question!(question.id) end
+    end
+
+    test "change_question/1 returns a question changeset" do
+      question = question_fixture()
+      assert %Ecto.Changeset{} = Events.change_question(question)
+    end
+  end
 end
