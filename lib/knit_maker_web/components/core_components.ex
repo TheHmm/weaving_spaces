@@ -677,12 +677,14 @@ defmodule KnitMakerWeb.CoreComponents do
   slot :tab, required: true do
     attr :title, :string, required: true
     attr :selected, :boolean
+    attr :click, :any, doc: "the function for handling phx-click on the tab"
   end
 
   def tab_bar(assigns) do
     selected_class = %{
       false => "hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300",
-      true => "text-blue-600 border-blue-600 active dark:text-blue-500 dark:border-blue-500"
+      true =>
+        "text-blue-600 border-blue-600 active dark:text-blue-500 dark:border-blue-500 border-b-2"
     }
 
     ~H"""
@@ -691,7 +693,8 @@ defmodule KnitMakerWeb.CoreComponents do
         <li :for={tab <- @tab} class="mr-2">
           <a
             href="#"
-            class={"inline-block p-4 border-b-2 rounded-t-lg border-transparent" <> selected_class[!!tab[:selected]]}
+            phx-click={tab[:click] && tab.click.()}
+            class={"inline-block p-4 rounded-t-lg border-transparent" <> selected_class[!!tab[:selected]]}
           >
             <%= tab.title %>
           </a>

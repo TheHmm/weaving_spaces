@@ -54,7 +54,7 @@
 </.modal>
 
 <.modal
-  :if={@live_action == :edit_question}
+  :if={@live_action in [:edit_question, :config_question]}
   id="event-modal"
   show
   on_cancel={JS.patch(~p"/events/#{@event}")}

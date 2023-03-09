@@ -12,10 +12,20 @@ defmodule KnitMakerWeb.QuestionLive.FormComponent do
         <%= @title %>
       </.header>
 
-      <.tab_bar>
-        <:tab title="Properties" />
-        <:tab title="Configuration" selected />
-      </.tab_bar>
+      <%= if @action != :add_question do %>
+        <.tab_bar>
+          <:tab
+            title="Properties"
+            selected={@action == :edit_question}
+            click={fn -> JS.navigate(~p"/events/#{@event}/question/#{@question}/edit") end}
+          />
+          <:tab
+            title="Configuration"
+            selected={@action == :config_question}
+            click={fn -> JS.navigate(~p"/events/#{@event}/question/#{@question}/config") end}
+          />
+        </.tab_bar>
+      <% end %>
 
       <.simple_form
         for={@form}
@@ -24,18 +34,21 @@ defmodule KnitMakerWeb.QuestionLive.FormComponent do
         phx-change="validate"
         phx-submit="save"
       >
-        <.input field={@form[:title]} type="text" label="Title" />
-        <div class="grid grid-cols-2 gap-4">
-          <.input
-            field={@form[:type]}
-            type="select"
-            label="Type"
-            options={KnitMaker.Events.Question.types()}
-          />
-          <.input field={@form[:rank]} type="number" label="Rank" />
-        </div>
-        <.input field={@form[:description]} type="text" label="Description" />
-        <.rjsf field={@form[:config]} schema={config_schema(@form[:type])} label="Config" />
+        <%= if @action == :config_question do %>
+          <.rjsf field={@form[:config]} schema={config_schema(@form[:type])} label="Config" />
+        <% else %>
+          <.input field={@form[:title]} type="text" label="Title" />
+          <div class="grid grid-cols-2 gap-4">
+            <.input
+              field={@form[:type]}
+              type="select"
+              label="Type"
+              options={KnitMaker.Events.Question.types()}
+            />
+            <.input field={@form[:rank]} type="number" label="Rank" />
+          </div>
+          <.input field={@form[:description]} type="text" label="Description" />
+        <% end %>
         <:actions>
           <.button phx-disable-with="Saving...">Save Question</.button>
         </:actions>
@@ -109,19 +122,17 @@ defmodule KnitMakerWeb.QuestionLive.FormComponent do
   end
 
   def handle_event("save", %{"question" => question_params}, socket) do
-    IO.inspect(question_params, label: "question_params")
-
     save_question(socket, socket.assigns.action, question_params)
   end
 
-  defp save_question(socket, :edit_question, question_params) do
-    case Events.update_question(socket.assigns.question, question_params) do
+  defp save_question(socket, :add_question, question_params) do
+    case Events.create_question_for_event(socket.assigns.event, question_params) do
       {:ok, question} ->
         notify_parent({:saved, question})
 
         {:noreply,
          socket
-         |> put_flash(:info, "Question updated successfully")
+         |> put_flash(:info, "Question created successfully")
          |> push_patch(to: socket.assigns.patch)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
@@ -129,15 +140,14 @@ defmodule KnitMakerWeb.QuestionLive.FormComponent do
     end
   end
 
-  defp save_question(socket, :add_question, question_params) do
-    case Events.create_question_for_event(socket.assigns.event, question_params)
-         |> IO.inspect(label: "u") do
+  defp save_question(socket, _, question_params) do
+    case Events.update_question(socket.assigns.question, question_params) do
       {:ok, question} ->
         notify_parent({:saved, question})
 
         {:noreply,
          socket
-         |> put_flash(:info, "Question created successfully")
+         |> put_flash(:info, "Question updated successfully")
          |> push_patch(to: socket.assigns.patch)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
