@@ -20,5 +20,10 @@ defmodule KnitMaker.Events.Question do
     question
     |> cast(attrs, [:title, :rank, :type, :description, :config, :code])
     |> validate_required([:title, :rank, :type])
+    |> validate_inclusion(:type, types())
+  end
+
+  def types() do
+    ~w(single multiple stars)
   end
 end

@@ -19,7 +19,12 @@
 
 <.back navigate={~p"/questions"}>Back to questions</.back>
 
-<.modal :if={@live_action == :edit} id="question-modal" show on_cancel={JS.patch(~p"/questions/#{@question}")}>
+<.modal
+  :if={@live_action == :edit}
+  id="question-modal"
+  show
+  on_cancel={JS.patch(~p"/questions/#{@question}")}
+>
   <.live_component
     module={KnitMakerWeb.QuestionLive.FormComponent}
     id={@question.id}

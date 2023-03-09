@@ -35,7 +35,7 @@ defmodule KnitMaker.EventsFixtures do
         description: "some description",
         rank: 42,
         title: "some title",
-        type: "some type"
+        type: "single"
       })
 
     {:ok, question} = KnitMaker.Events.create_question_for_event(event, attrs)
