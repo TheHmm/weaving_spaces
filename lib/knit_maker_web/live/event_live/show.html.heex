@@ -15,11 +15,49 @@
   <:item title="Image url"><%= @event.image_url %></:item>
 </.list>
 
+<.header>Questions</.header>
+
+<ul>
+  <%= for q <- @questions do %>
+  <li>
+    <.link patch={~p"/events/#{@event}/question/#{q}/edit"}><%= q.title %></.link>
+  </li>
+  <% end %>
+</ul>
+
+    <.link patch={~p"/events/#{@event}/question/add"}>
+      <.button>Add question</.button>
+    </.link>
+
+
 <.back navigate={~p"/events"}>Back to events</.back>
 
 <.modal :if={@live_action == :edit} id="event-modal" show on_cancel={JS.patch(~p"/events/#{@event}")}>
   <.live_component
     module={KnitMakerWeb.EventLive.FormComponent}
+    id={@event.id}
+    title={@page_title}
+    action={@live_action}
+    event={@event}
+    patch={~p"/events/#{@event}"}
+  />
+</.modal>
+
+<.modal :if={@live_action == :edit_question} id="event-modal" show on_cancel={JS.patch(~p"/events/#{@event}")}>
+  <.live_component
+    module={KnitMakerWeb.QuestionLive.FormComponent}
+    id={@question.id}
+    title={@page_title}
+    action={@live_action}
+    event={@event}
+    question={@question}
+    patch={~p"/events/#{@event}"}
+  />
+</.modal>
+
+<.modal :if={@live_action == :add_question} id="event-modal" show on_cancel={JS.patch(~p"/events/#{@event}")}>
+  <.live_component
+    module={KnitMakerWeb.QuestionLive.FormComponent}
     id={@event.id}
     title={@page_title}
     action={@live_action}

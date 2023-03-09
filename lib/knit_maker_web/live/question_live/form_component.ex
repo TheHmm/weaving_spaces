@@ -2,6 +2,7 @@ defmodule KnitMakerWeb.QuestionLive.FormComponent do
   use KnitMakerWeb, :live_component
 
   alias KnitMaker.Events
+  alias KnitMaker.Events.Question
 
   @impl true
   def render(assigns) do
@@ -9,7 +10,6 @@ defmodule KnitMakerWeb.QuestionLive.FormComponent do
     <div>
       <.header>
         <%= @title %>
-        <:subtitle>Use this form to manage question records in your database.</:subtitle>
       </.header>
 
       <.simple_form
@@ -23,7 +23,6 @@ defmodule KnitMakerWeb.QuestionLive.FormComponent do
         <.input field={@form[:rank]} type="number" label="Rank" />
         <.input field={@form[:type]} type="text" label="Type" />
         <.input field={@form[:description]} type="text" label="Description" />
-        <.input field={@form[:config]} type="text" label="Config" />
         <.input field={@form[:code]} type="text" label="Code" />
         <:actions>
           <.button phx-disable-with="Saving...">Save Question</.button>
@@ -43,6 +42,10 @@ defmodule KnitMakerWeb.QuestionLive.FormComponent do
      |> assign_form(changeset)}
   end
 
+  def update(assigns, socket) do
+    update(Map.put(assigns, :question, %Question{}), socket)
+  end
+
   @impl true
   def handle_event("validate", %{"question" => question_params}, socket) do
     changeset =
@@ -57,7 +60,7 @@ defmodule KnitMakerWeb.QuestionLive.FormComponent do
     save_question(socket, socket.assigns.action, question_params)
   end
 
-  defp save_question(socket, :edit, question_params) do
+  defp save_question(socket, :edit_question, question_params) do
     case Events.update_question(socket.assigns.question, question_params) do
       {:ok, question} ->
         notify_parent({:saved, question})
@@ -72,8 +75,9 @@ defmodule KnitMakerWeb.QuestionLive.FormComponent do
     end
   end
 
-  defp save_question(socket, :new, question_params) do
-    case Events.create_question(question_params) do
+  defp save_question(socket, :add_question, question_params) do
+    case Events.create_question_for_event(socket.assigns.event, question_params)
+         |> IO.inspect(label: "u") do
       {:ok, question} ->
         notify_parent({:saved, question})
 

@@ -79,8 +79,11 @@ defmodule KnitMaker.EventsTest do
     @invalid_attrs %{code: nil, config: nil, description: nil, rank: nil, title: nil, type: nil}
 
     test "list_questions/0 returns all questions" do
-      question = question_fixture()
-      assert Events.list_questions() == [question]
+      event = event_fixture()
+
+      question1 = question_fixture(event)
+      question2 = question_fixture(event)
+      assert Events.list_questions(event) == [question1, question2]
     end
 
     test "get_question!/1 returns the question with given id" do
@@ -89,9 +92,19 @@ defmodule KnitMaker.EventsTest do
     end
 
     test "create_question/1 with valid data creates a question" do
-      valid_attrs = %{code: "some code", config: %{}, description: "some description", rank: 42, title: "some title", type: "some type"}
+      valid_attrs = %{
+        code: "some code",
+        config: %{},
+        description: "some description",
+        rank: 42,
+        title: "some title",
+        type: "some type"
+      }
 
-      assert {:ok, %Question{} = question} = Events.create_question(valid_attrs)
+      event = event_fixture()
+      assert {:ok, %Question{} = question} = Events.create_question_for_event(event, valid_attrs)
+
+      assert question.event_id == event.id
       assert question.code == "some code"
       assert question.config == %{}
       assert question.description == "some description"
@@ -101,12 +114,21 @@ defmodule KnitMaker.EventsTest do
     end
 
     test "create_question/1 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = Events.create_question(@invalid_attrs)
+      assert {:error, %Ecto.Changeset{}} =
+               Events.create_question_for_event(event_fixture(), @invalid_attrs)
     end
 
     test "update_question/2 with valid data updates the question" do
       question = question_fixture()
-      update_attrs = %{code: "some updated code", config: %{}, description: "some updated description", rank: 43, title: "some updated title", type: "some updated type"}
+
+      update_attrs = %{
+        code: "some updated code",
+        config: %{},
+        description: "some updated description",
+        rank: 43,
+        title: "some updated title",
+        type: "some updated type"
+      }
 
       assert {:ok, %Question{} = question} = Events.update_question(question, update_attrs)
       assert question.code == "some updated code"

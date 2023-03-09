@@ -4,7 +4,7 @@ defmodule KnitMaker.Events.Question do
 
   schema "questions" do
     field :code, :string
-    field :config, :map
+    field :config, :map, default: %{}
     field :description, :string
     field :rank, :integer
     field :title, :string
@@ -19,6 +19,6 @@ defmodule KnitMaker.Events.Question do
   def changeset(question, attrs) do
     question
     |> cast(attrs, [:title, :rank, :type, :description, :config, :code])
-    |> validate_required([:title, :rank, :type, :description, :config, :code])
+    |> validate_required([:title, :rank, :type])
   end
 end

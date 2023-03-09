@@ -24,8 +24,10 @@ defmodule KnitMaker.EventsFixtures do
   @doc """
   Generate a question.
   """
-  def question_fixture(attrs \\ %{}) do
-    {:ok, question} =
+  def question_fixture(event \\ nil, attrs \\ %{}) do
+    event = event || event_fixture()
+
+    attrs =
       attrs
       |> Enum.into(%{
         code: "some code",
@@ -35,7 +37,8 @@ defmodule KnitMaker.EventsFixtures do
         title: "some title",
         type: "some type"
       })
-      |> KnitMaker.Events.create_question()
+
+    {:ok, question} = KnitMaker.Events.create_question_for_event(event, attrs)
 
     question
   end

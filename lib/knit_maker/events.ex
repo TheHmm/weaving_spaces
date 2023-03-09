@@ -113,8 +113,16 @@ defmodule KnitMaker.Events do
       [%Question{}, ...]
 
   """
-  def list_questions do
-    Repo.all(Question)
+  def list_questions(%Event{} = event) do
+    list_questions(event.id)
+  end
+
+  def list_questions(event_id) do
+    from(q in Question,
+      where: q.event_id == ^event_id,
+      order_by: [q.rank, q.inserted_at]
+    )
+    |> Repo.all()
   end
 
   @doc """
@@ -145,8 +153,8 @@ defmodule KnitMaker.Events do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_question(attrs \\ %{}) do
-    %Question{}
+  def create_question_for_event(%Event{} = event, attrs \\ %{}) do
+    %Question{event_id: event.id}
     |> Question.changeset(attrs)
     |> Repo.insert()
   end

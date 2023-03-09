@@ -48,6 +48,8 @@ defmodule KnitMakerWeb.Router do
       live "/events", EventLive.Index, :index
       live "/events/new", EventLive.Index, :new
       live "/events/:id/edit", EventLive.Show, :edit
+      live "/events/:id/question/add", EventLive.Show, :add_question
+      live "/events/:id/question/:question_id/edit", EventLive.Show, :edit_question
     end
   end
 
