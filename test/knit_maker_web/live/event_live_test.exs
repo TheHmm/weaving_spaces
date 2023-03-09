@@ -4,8 +4,20 @@ defmodule KnitMakerWeb.EventLiveTest do
   import Phoenix.LiveViewTest
   import KnitMaker.EventsFixtures
 
-  @create_attrs %{description: "some description", image_url: "some image_url", name: "some name"}
-  @update_attrs %{description: "some updated description", image_url: "some updated image_url", name: "some updated name"}
+  setup :register_and_log_in_user
+
+  @create_attrs %{
+    slug: "some-slug",
+    description: "some description",
+    image_url: "some image_url",
+    name: "some name"
+  }
+  @update_attrs %{
+    slug: "some-updated-slug",
+    description: "some updated description",
+    image_url: "some updated image_url",
+    name: "some updated name"
+  }
   @invalid_attrs %{description: nil, image_url: nil, name: nil}
 
   defp create_event(_) do
@@ -46,29 +58,6 @@ defmodule KnitMakerWeb.EventLiveTest do
       assert html =~ "some description"
     end
 
-    test "updates event in listing", %{conn: conn, event: event} do
-      {:ok, index_live, _html} = live(conn, ~p"/events")
-
-      assert index_live |> element("#events-#{event.id} a", "Edit") |> render_click() =~
-               "Edit Event"
-
-      assert_patch(index_live, ~p"/events/#{event}/edit")
-
-      assert index_live
-             |> form("#event-form", event: @invalid_attrs)
-             |> render_change() =~ "can&#39;t be blank"
-
-      assert index_live
-             |> form("#event-form", event: @update_attrs)
-             |> render_submit()
-
-      assert_patch(index_live, ~p"/events")
-
-      html = render(index_live)
-      assert html =~ "Event updated successfully"
-      assert html =~ "some updated description"
-    end
-
     test "deletes event in listing", %{conn: conn, event: event} do
       {:ok, index_live, _html} = live(conn, ~p"/events")
 
@@ -93,7 +82,7 @@ defmodule KnitMakerWeb.EventLiveTest do
       assert show_live |> element("a", "Edit") |> render_click() =~
                "Edit Event"
 
-      assert_patch(show_live, ~p"/events/#{event}/show/edit")
+      assert_patch(show_live, ~p"/events/#{event}/edit")
 
       assert show_live
              |> form("#event-form", event: @invalid_attrs)

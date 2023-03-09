@@ -19,7 +19,8 @@ defmodule KnitMakerWeb.EventLive.FormComponent do
         phx-change="validate"
         phx-submit="save"
       >
-        <.input field={@form[:name]} type="text" label="Name" />
+        <.input field={@form[:slug]} type="text" label="Slug" required />
+        <.input field={@form[:name]} type="text" label="Name" required />
         <.input field={@form[:description]} type="text" label="Description" />
         <.input field={@form[:image_url]} type="text" label="Image url" />
         <:actions>
