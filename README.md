@@ -1,22 +1,36 @@
 # KnitMaker
 
+[![Elixir CI](https://github.com/arjan/knit_maker/actions/workflows/elixir.yml/badge.svg)](https://github.com/arjan/knit_maker/actions/workflows/elixir.yml)
+
 An interface for creating knittings as feedback on physical/virtual events
 (meetups, exhibitions, symposia, etc).
 
-Data model
+## Data model
 
-user
+**user**
 is_admin: true/false
 is_anonymous: true/false
 
-event
+**event**
 
+- slug
 - title
+- description
+- image
 
-question
+**question**
 
-- event ID
-- order
-- type
-- config
-- code
+- event_id
+- order (number)
+- type (enum)
+- config (map)
+- code (string)
+
+**user_event_feedback**
+
+- event_id
+- user_id
+- question_id
+- timestamps
+- data?
+- value (number)
