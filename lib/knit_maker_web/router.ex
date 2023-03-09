@@ -49,6 +49,13 @@ defmodule KnitMakerWeb.Router do
 
     live_session :require_authenticated_user,
       on_mount: [{KnitMakerWeb.UserAuth, :ensure_authenticated}] do
+      live "/events", EventLive.Index, :index
+      live "/events/new", EventLive.Index, :new
+      live "/events/:id/edit", EventLive.Index, :edit
+
+      live "/events/:id", EventLive.Show, :show
+      live "/events/:id/show/edit", EventLive.Show, :edit
+
       live "/users/settings", UserSettingsLive, :edit
       live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
     end
