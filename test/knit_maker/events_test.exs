@@ -78,7 +78,7 @@ defmodule KnitMaker.EventsTest do
 
     @invalid_attrs %{code: nil, config: nil, description: nil, rank: nil, title: nil, type: nil}
 
-    test "list_questions/0 returns all questions" do
+    test "list_questions returns all questions" do
       event = event_fixture()
 
       question1 = question_fixture(event)

@@ -12,6 +12,11 @@ defmodule KnitMakerWeb.QuestionLive.FormComponent do
         <%= @title %>
       </.header>
 
+      <.tab_bar>
+        <:tab title="Properties" />
+        <:tab title="Configuration" selected />
+      </.tab_bar>
+
       <.simple_form
         for={@form}
         id="question-form"
@@ -19,20 +24,62 @@ defmodule KnitMakerWeb.QuestionLive.FormComponent do
         phx-change="validate"
         phx-submit="save"
       >
-        <.input
-          field={@form[:type]}
-          type="select"
-          label="Type"
-          options={KnitMaker.Events.Question.types()}
-        />
         <.input field={@form[:title]} type="text" label="Title" />
-        <.input field={@form[:rank]} type="number" label="Rank" />
+        <div class="grid grid-cols-2 gap-4">
+          <.input
+            field={@form[:type]}
+            type="select"
+            label="Type"
+            options={KnitMaker.Events.Question.types()}
+          />
+          <.input field={@form[:rank]} type="number" label="Rank" />
+        </div>
         <.input field={@form[:description]} type="text" label="Description" />
-        <.input field={@form[:code]} type="text" label="Code" />
+        <.rjsf field={@form[:config]} schema={config_schema(@form[:type])} label="Config" />
         <:actions>
           <.button phx-disable-with="Saving...">Save Question</.button>
         </:actions>
       </.simple_form>
+    </div>
+    """
+  end
+
+  def config_schema(_type) do
+    %{
+      "properties" => %{
+        "emails" => %{
+          "type" => "array",
+          "items" => %{
+            "title" => "",
+            "properties" => %{
+              "email" => %{"type" => "string", "format" => "email"}
+            }
+          }
+        }
+      }
+    }
+  end
+
+  attr :field, Phoenix.HTML.FormField, required: true
+  attr :label, :string, required: true
+  attr :schema, :map, required: true
+  attr :ui_schema, :map
+
+  def rjsf(assigns) do
+    assigns = assigns |> assign_new(:ui_schema, fn -> %{} end)
+
+    ~H"""
+    <div
+      phx-feedback-for={@field.name}
+      phx-update="ignore"
+      phx-hook="RJSF"
+      id={@field.name}
+      data-schema={Jason.encode!(@schema || %{})}
+      data-ui-schema={Jason.encode!(@ui_schema || %{})}
+    >
+      <input type="hidden" name={@field.name} value={Jason.encode!(@field.value)} />
+      <.label for={@field.name}><%= @label %></.label>
+      <div class="root"></div>
     </div>
     """
   end
@@ -62,6 +109,8 @@ defmodule KnitMakerWeb.QuestionLive.FormComponent do
   end
 
   def handle_event("save", %{"question" => question_params}, socket) do
+    IO.inspect(question_params, label: "question_params")
+
     save_question(socket, socket.assigns.action, question_params)
   end
 

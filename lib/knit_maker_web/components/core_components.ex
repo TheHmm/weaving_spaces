@@ -670,4 +670,34 @@ defmodule KnitMakerWeb.CoreComponents do
   def translate_errors(errors, field) when is_list(errors) do
     for {^field, {msg, opts}} <- errors, do: translate_error({msg, opts})
   end
+
+  @doc """
+  tab bar
+  """
+  slot :tab, required: true do
+    attr :title, :string, required: true
+    attr :selected, :boolean
+  end
+
+  def tab_bar(assigns) do
+    selected_class = %{
+      false => "hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300",
+      true => "text-blue-600 border-blue-600 active dark:text-blue-500 dark:border-blue-500"
+    }
+
+    ~H"""
+    <div class="text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700">
+      <ul class="flex flex-wrap -mb-px">
+        <li :for={tab <- @tab} class="mr-2">
+          <a
+            href="#"
+            class={"inline-block p-4 border-b-2 rounded-t-lg border-transparent" <> selected_class[!!tab[:selected]]}
+          >
+            <%= tab.title %>
+          </a>
+        </li>
+      </ul>
+    </div>
+    """
+  end
 end

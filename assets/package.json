@@ -1,0 +1,24 @@
+{
+  "name": "assets",
+  "version": "1.0.0",
+  "description": "",
+  "main": "tailwind.config.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@ant-design/cssinjs": "^1.6.1",
+    "@rjsf/antd": "^5.2.1",
+    "@rjsf/core": "^5.2.1",
+    "@rjsf/validator-ajv8": "^5.2.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.28",
+    "@types/react-dom": "^18.0.11"
+  }
+}

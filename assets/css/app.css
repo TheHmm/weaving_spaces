@@ -3,3 +3,10 @@
 @import "tailwindcss/utilities";
 
 /* This file is for your main application CSS */
+
+form.rjsf label {
+  display: block;
+}
+form.rjsf input[type="text"] {
+  border-color: rgb(212 212 216 / var(--tw-border-opacity));
+}
