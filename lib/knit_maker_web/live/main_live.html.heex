@@ -1,0 +1,20 @@
+<h1><%= @event.name %></h1>
+
+<%= @question.title %>
+
+<div>
+  <.link
+    :if={@prev_question}
+    navigate={~p"/#{@event.slug}/q/#{@prev_question}"}
+    class="font-semibold text-brand hover:underline"
+  >
+    Previous
+  </.link>
+  <.link
+    :if={@next_question}
+    navigate={~p"/#{@event.slug}/q/#{@next_question}"}
+    class="font-semibold text-brand hover:underline"
+  >
+    Next
+  </.link>
+</div>

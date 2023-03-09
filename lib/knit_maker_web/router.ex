@@ -3,6 +3,8 @@ defmodule KnitMakerWeb.Router do
 
   import KnitMakerWeb.UserAuth
 
+  @ensure_authenticated {KnitMakerWeb.UserAuth, :ensure_authenticated}
+
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
@@ -44,7 +46,8 @@ defmodule KnitMakerWeb.Router do
     pipe_through [:browser, :require_admin_user]
 
     live_session :require_admin_user,
-      on_mount: [{KnitMakerWeb.UserAuth, :ensure_authenticated}] do
+      on_mount: [@ensure_authenticated],
+      layout: {KnitMakerWeb.Layouts, :admin} do
       live "/events", EventLive.Index, :index
       live "/events/new", EventLive.Index, :new
       live "/events/:id", EventLive.Show, :show
@@ -60,8 +63,12 @@ defmodule KnitMakerWeb.Router do
   scope "/", KnitMakerWeb do
     pipe_through [:browser, :require_authenticated_user]
 
-    live_session :require_authenticated_user,
-      on_mount: [{KnitMakerWeb.UserAuth, :ensure_authenticated}] do
+    live_session :event_user_facing, on_mount: [@ensure_authenticated] do
+      live "/:slug", MainLive, :show
+      live "/:slug/q/:question_id", MainLive, :show_question
+    end
+
+    live_session :user_settings, on_mount: [@ensure_authenticated] do
       live "/users/settings", UserSettingsLive, :edit
       live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
     end
