@@ -4,7 +4,9 @@ defmodule KnitMakerWeb.MainLive do
   alias KnitMaker.Events
 
   @impl true
-  def mount(%{"question_id" => question_id} = params, _session, socket) do
+  def mount(%{"question_id" => question_id} = params, session, socket) do
+    IO.inspect(session, label: "session")
+
     socket = load_all(socket, params)
 
     %{questions: questions} = socket.assigns

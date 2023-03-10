@@ -25,6 +25,10 @@ defmodule KnitMakerWeb.Router do
     get "/", PageController, :home
   end
 
+  pipeline :participant_session do
+    plug KnitMakerWeb.Plug.ParticipantSession
+  end
+
   ## Authentication routes
 
   scope "/", KnitMakerWeb do
@@ -56,21 +60,19 @@ defmodule KnitMakerWeb.Router do
       live "/events/:id/question/add", EventLive.Show, :add_question
       live "/events/:id/question/:question_id/edit", EventLive.Show, :edit_question
       live "/events/:id/question/:question_id/config", EventLive.Show, :config_question
+
+      live "/users/settings", UserSettingsLive, :edit
+      live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
     end
   end
 
   # authenticated routes
   scope "/", KnitMakerWeb do
-    pipe_through [:browser, :require_authenticated_user]
+    pipe_through [:browser, :participant_session]
 
-    live_session :event_user_facing, on_mount: [@ensure_authenticated] do
+    live_session :participant do
       live "/:slug", MainLive, :show
       live "/:slug/q/:question_id", MainLive, :show_question
-    end
-
-    live_session :user_settings, on_mount: [@ensure_authenticated] do
-      live "/users/settings", UserSettingsLive, :edit
-      live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
     end
   end
 

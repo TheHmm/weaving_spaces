@@ -3,6 +3,8 @@ defmodule KnitMaker.Events.Question do
   import Ecto.Changeset
 
   schema "questions" do
+    field :name, :string
+
     field :code, :string
     field :config, :map, default: %{}
     field :description, :string
@@ -18,10 +20,11 @@ defmodule KnitMaker.Events.Question do
   @doc false
   def changeset(question, attrs) do
     question
-    |> cast(attrs, [:title, :rank, :type, :description, :code])
+    |> cast(attrs, [:title, :name, :rank, :type, :description, :code])
     |> json_decode(:config, attrs["config"] || attrs[:config])
-    |> validate_required([:title, :rank, :type])
+    |> validate_required([:title, :name, :rank, :type])
     |> validate_inclusion(:type, types())
+    |> validate_format(:name, ~r/^[a-z][a-z0-9_]*$/)
   end
 
   defp json_decode(cs, field, value) do

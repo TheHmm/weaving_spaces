@@ -30,6 +30,7 @@ defmodule KnitMaker.EventsFixtures do
     attrs =
       attrs
       |> Enum.into(%{
+        name: "question",
         code: "some code",
         config: %{},
         description: "some description",

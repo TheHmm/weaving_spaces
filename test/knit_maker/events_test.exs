@@ -93,6 +93,7 @@ defmodule KnitMaker.EventsTest do
 
     test "create_question/1 with valid data creates a question" do
       valid_attrs = %{
+        name: "some_code",
         code: "some code",
         config: %{},
         description: "some description",
@@ -122,6 +123,7 @@ defmodule KnitMaker.EventsTest do
       question = question_fixture()
 
       update_attrs = %{
+        name: "updated_name",
         code: "some updated code",
         config: %{},
         description: "some updated description",
