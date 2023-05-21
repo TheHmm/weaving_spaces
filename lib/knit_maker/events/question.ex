@@ -41,6 +41,6 @@ defmodule KnitMaker.Events.Question do
   end
 
   def types() do
-    ~w(single multiple stars)
+    ~w(choices choices-2column choices-gradient pixel)
   end
 end

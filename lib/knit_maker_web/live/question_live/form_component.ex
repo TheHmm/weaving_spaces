@@ -61,13 +61,11 @@ defmodule KnitMakerWeb.QuestionLive.FormComponent do
   def config_schema(_type) do
     %{
       "properties" => %{
-        "emails" => %{
+        "answers" => %{
+          "title" => "",
           "type" => "array",
           "items" => %{
-            "title" => "",
-            "properties" => %{
-              "email" => %{"type" => "string", "format" => "email"}
-            }
+            "type" => "string"
           }
         }
       }

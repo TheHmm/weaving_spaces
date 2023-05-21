@@ -17,6 +17,9 @@ module.exports = {
         wider: "0.4em",
         widest: "0.8em",
       },
+      borderRadius: {
+        lg: "30px",
+      },
     },
   },
   plugins: [

@@ -28,7 +28,11 @@ defmodule KnitMakerWeb.MainLive do
   @impl true
   def handle_event("start", %{}, socket) do
     id = List.first(socket.assigns.questions).id
+    {:noreply, redirect(socket, to: ~p"/#{socket.assigns.event.slug}/q/#{id}")}
+  end
 
+  def handle_event("next", %{}, socket) do
+    id = socket.assigns.next_question.id
     {:noreply, redirect(socket, to: ~p"/#{socket.assigns.event.slug}/q/#{id}")}
   end
 

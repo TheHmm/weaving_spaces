@@ -5,16 +5,27 @@
 </div>
 
 <%= if assigns[:question] do %>
-  <%= @question.title %>
+  <div class="mx-auto max-w-md text-center">
+    <div class="choices-box">
+      <%= @question.title %>
 
-  <div>
-    <.link
-      :if={@next_question}
-      navigate={~p"/#{@event.slug}/q/#{@next_question}"}
-      class="font-semibold text-brand hover:underline"
-    >
-      Next
-    </.link>
+      <div class={"answers " <> @question.type}>
+        <%= for answer <- @question.config["answers"] || [] do %>
+          <label>
+            <input type="radio" name="x" />
+            <%= answer %>
+          </label>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <div :if={@next_question} class="mt-4 text-center">
+    <button class="large" phx-click="next">Next</button>
+  </div>
+
+  <div :if={!@next_question} class="mt-4 text-center">
+    <button class="large" phx-click="done">Visualize</button>
   </div>
 <% else %>
   <div class="columns-1 sm:columns-2 text-sm py-10 px-4">

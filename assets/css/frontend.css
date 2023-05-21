@@ -12,14 +12,55 @@ html.frontend button.large {
     #f0ffc6 75.41%,
     #9e00ff 100%
   );
-  border-radius: 71px;
+
   padding: 15px 40px;
   color: black;
   text-transform: uppercase;
   letter-spacing: 0.2em;
   font-size: 1.4em;
+  @apply rounded-lg;
 }
 
 html.frontend main {
   background-image: url(/assets/img/bg_grid.png);
+}
+
+html.frontend .choices-box {
+  @apply p-8 bg-gray-600 rounded-lg mx-4 bg-neutral-500;
+}
+
+html.frontend .choices-box > .answers {
+  @apply p-6 rounded-lg bg-neutral-600 mt-5 text-left;
+}
+
+html.frontend .choices-box > .answers.choices-gradient {
+  background: linear-gradient(
+    90deg,
+    #d9ff9a 0%,
+    #33ff00 33.33%,
+    #fffee0 48.96%,
+    #971ab7 64.58%,
+    #c377ff 100%
+  );
+  @apply columns-2 border-8 border-neutral-600 text-neutral-600;
+}
+html.frontend .choices-box > .answers.choices-gradient input {
+  @apply hidden;
+}
+html.frontend .choices-box > .answers.choices-gradient label {
+  @apply text-black;
+}
+html.frontend .choices-box > .answers.choices-gradient label:last-child {
+  @apply text-right;
+}
+
+html.frontend .choices-box > .answers.choices-2column {
+  @apply columns-2 space-y-4;
+}
+html.frontend .choices-box > .answers.choices {
+  @apply space-y-4;
+}
+html.frontend .choices-box label {
+  cursor: pointer;
+  @apply block;
 }
