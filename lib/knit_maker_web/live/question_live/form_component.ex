@@ -58,7 +58,27 @@ defmodule KnitMakerWeb.QuestionLive.FormComponent do
     """
   end
 
-  def config_schema(_type) do
+  def config_schema(%{value: "pixel"}) do
+    %{
+      "properties" => %{
+        "max_pixels" => %{
+          "type" => "number",
+          "title" => "Pixels per user"
+        },
+        "width" => %{
+          "type" => "number",
+          "title" => "Grid width"
+        },
+        "height" => %{
+          "type" => "number",
+          "title" => "Grid height"
+        }
+      },
+      "required" => ["max_pixels", "width", "height"]
+    }
+  end
+
+  def config_schema(_) do
     %{
       "properties" => %{
         "answers" => %{

@@ -18,5 +18,8 @@ defmodule KnitMaker.Participants.Response do
     response
     |> cast(attrs, [:value, :participant_id, :text, :json])
     |> validate_required([:participant_id, :event_id, :question_id])
+    |> unique_constraint(:participant_id,
+      name: :responses_event_id_question_id_participant_id_index
+    )
   end
 end

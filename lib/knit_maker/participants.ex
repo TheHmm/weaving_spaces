@@ -22,6 +22,16 @@ defmodule KnitMaker.Participants do
     Repo.all(Response)
   end
 
+  def list_responses_by_event_and_participant(event_id, participant_id) do
+    from(r in Response,
+      where:
+        r.event_id == ^event_id and
+          r.participant_id == ^participant_id,
+      select: r
+    )
+    |> Repo.all()
+  end
+
   @doc """
   Gets a single response.
 
@@ -41,10 +51,33 @@ defmodule KnitMaker.Participants do
   @doc """
   Creates a response.
   """
-  def create_response(%Question{} = question, attrs \\ %{}) do
-    %Response{question_id: question.id, event_id: question.event_id}
-    |> Response.changeset(attrs)
-    |> Repo.insert()
+  def create_response(%Question{} = question, attrs \\ %{}, on_conflict \\ nil) do
+    result =
+      %Response{question_id: question.id, event_id: question.event_id}
+      |> Response.changeset(attrs)
+      |> Repo.insert()
+
+    with {:error, %{errors: [participant_id: _]}} <- result do
+      participant_id = attrs["participant_id"]
+
+      [response] =
+        from(r in Response,
+          where:
+            r.event_id == ^question.event_id and r.question_id == ^question.id and
+              r.participant_id == ^participant_id
+        )
+        |> Repo.all()
+
+      Repo.delete!(response)
+
+      attrs =
+        case on_conflict do
+          nil -> attrs
+          fun -> fun.(response, attrs)
+        end
+
+      create_response(question, attrs)
+    end
   end
 
   @doc """
@@ -92,5 +125,18 @@ defmodule KnitMaker.Participants do
   """
   def change_response(%Response{} = response, attrs \\ %{}) do
     Response.changeset(response, attrs)
+  end
+
+  def get_pixels(question_id, w, h) do
+    from(r in Response,
+      where: r.question_id == ^question_id,
+      select: r.json["pixels"]
+    )
+    |> Repo.all()
+    |> Enum.flat_map(&Jason.decode!/1)
+    |> Enum.sort()
+    |> Enum.reduce(Pat.new(w, h), fn [_date, x, y, p], pat ->
+      Pat.set(pat, x, y, p)
+    end)
   end
 end

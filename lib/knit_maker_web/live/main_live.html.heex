@@ -10,11 +10,38 @@
       <%= @question.title %>
 
       <div class={"answers " <> @question.type}>
-        <%= for answer <- @question.config["answers"] || [] do %>
-          <label>
-            <input type="radio" name="x" />
-            <%= answer %>
-          </label>
+        <%= if @question.type == "pixel" do %>
+          <table class="mx-auto">
+            <%= for y <- 0..(@question.config["height"]-1) do %>
+              <tr>
+                <%= for x <- 0..(@question.config["height"]-1) do %>
+                  <td
+                    phx-click={JS.push("set-pixel", value: %{x: x, y: y, col: @pixel[{x, y}]})}
+                    class={"color-" <> @pixel[{x, y}]}
+                  >
+                    <span></span>
+                  </td>
+                <% end %>
+              </tr>
+            <% end %>
+          </table>
+        <% else %>
+          <%= for {answer, index} <- Enum.with_index(@question.config["answers"] || []) do %>
+            <label
+              phx-click={JS.push("set-answer", value: %{text: answer, value: index})}
+              class={
+                (@responses[@question.id] && @responses[@question.id].value == index && "selected") ||
+                  ""
+              }
+            >
+              <input
+                type="radio"
+                name="q"
+                checked={@responses[@question.id] && @responses[@question.id].value == index}
+              />
+              <%= answer %>
+            </label>
+          <% end %>
         <% end %>
       </div>
     </div>

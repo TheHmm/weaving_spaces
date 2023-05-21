@@ -79,5 +79,23 @@ defmodule KnitMaker.ParticipantsTest do
       response = response_fixture(question_fixture())
       assert %Ecto.Changeset{} = Participants.change_response(response)
     end
+
+    test "get pixel data" do
+      question = question_fixture()
+
+      a = %{
+        json: %{
+          "pixels" => [
+            ["2023-05-21 21:45:30.001447Z", 0, 0, "1"],
+            ["2023-05-21 21:45:34.901371Z", 0, 1, "1"]
+          ]
+        },
+        participant_id: "a"
+      }
+
+      {:ok, _} = Participants.create_response(question, a)
+
+      assert %Pat{} = Participants.get_pixels(question.id, 10, 10)
+    end
   end
 end
