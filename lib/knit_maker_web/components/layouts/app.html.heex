@@ -1,5 +1,13 @@
-<main class="px-4 py-20 sm:px-6 lg:px-8">
-  <div class="mx-auto max-w-2xl">
+<header class="sm:px-6 lg:px-8">
+  <div class="mx-auto max-w-4xl uppercase text-right text-sm border-b border-gray-400 py-2">
+    <span class="tracking-wide hidden sm:inline">This is a project by</span>
+    <span class="tracking-wider">&nbsp;Toolkit for the</span>
+    <span class="tracking-widest">&nbsp;inbetween</span>
+  </div>
+</header>
+
+<main class="py-20 sm:px-6 lg:px-8">
+  <div class="mx-auto max-w-4xl">
     <.flash_group flash={@flash} />
     <%= @inner_content %>
   </div>

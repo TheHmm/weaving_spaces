@@ -21,11 +21,15 @@ defmodule KnitMakerWeb.MainLive do
     {:ok, socket}
   end
 
-  def mount(params, session, socket) do
-    socket = load_all(socket, params)
-    id = session["current_question_id"] || List.first(socket.assigns.questions).id
+  def mount(params, _session, socket) do
+    {:ok, load_all(socket, params)}
+  end
 
-    {:ok, redirect(socket, to: ~p"/#{params["slug"]}/q/#{id}")}
+  @impl true
+  def handle_event("start", %{}, socket) do
+    id = List.first(socket.assigns.questions).id
+
+    {:noreply, redirect(socket, to: ~p"/#{socket.assigns.event.slug}/q/#{id}")}
   end
 
   defp load_all(socket, %{"slug" => slug}) do
@@ -33,6 +37,7 @@ defmodule KnitMakerWeb.MainLive do
     questions = Events.list_questions(event.id)
 
     socket
+    |> assign(:app, "frontend")
     |> assign(:event, event)
     |> assign(:questions, questions)
   end

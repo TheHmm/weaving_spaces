@@ -1,20 +1,38 @@
-<h1><%= @event.name %></h1>
+<img src={~p"/assets/img/main_logo.png"} class="w-100" />
 
-<%= @question.title %>
-
-<div>
-  <.link
-    :if={@prev_question}
-    navigate={~p"/#{@event.slug}/q/#{@prev_question}"}
-    class="font-semibold text-brand hover:underline"
-  >
-    Previous
-  </.link>
-  <.link
-    :if={@next_question}
-    navigate={~p"/#{@event.slug}/q/#{@next_question}"}
-    class="font-semibold text-brand hover:underline"
-  >
-    Next
-  </.link>
+<div class="py-8">
+  <h1 class="text-4xl text-center tracking-widest uppercase"><%= @event.name %></h1>
 </div>
+
+<%= if assigns[:question] do %>
+  <%= @question.title %>
+
+  <div>
+    <.link
+      :if={@next_question}
+      navigate={~p"/#{@event.slug}/q/#{@next_question}"}
+      class="font-semibold text-brand hover:underline"
+    >
+      Next
+    </.link>
+  </div>
+<% else %>
+  <div class="columns-1 sm:columns-2 text-sm py-10 px-4">
+    <div>
+      <h3 class="uppercase tracking-wide mb-4">About the event</h3>
+      <p>
+        Short introduction about the event or whatever else the organiser wants to write here. Ut ac tellus tortor. Donec ut sollicitudin massa, non ultricies nisi. Vestibulum blandit, turpis a euismod efficitur, nibh purus tristique leo, vel placerat orci tortor nec arcu. Suspendisse vestibulum arcu leo.
+      </p>
+    </div>
+    <div>
+      <h3 class="uppercase tracking-wide mb-4">About the app</h3>
+      <p>
+        Short introduction about the premise of the webapp or whatever else the organiser wants to write here. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin quis eros a urna pulvinar condimentum id nec nisl. Donec auctor lacus leo, eget gravida justo venenatis non.
+      </p>
+    </div>
+  </div>
+
+  <div class="text-center border-t border-gray-400 mt-4 pt-8 ">
+    <button class="large" phx-click="start">Start</button>
+  </div>
+<% end %>

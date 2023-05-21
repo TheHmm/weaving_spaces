@@ -48,7 +48,8 @@ defmodule KnitMaker.MixProject do
       {:jason, "~> 1.2"},
       {:plug_cowboy, "~> 2.5"},
       {:swoosh, "~> 1.4"},
-      {:hackney, "~> 1.18"}
+      {:hackney, "~> 1.18"},
+      {:earmark, "~> 1.4"}
     ]
   end
 

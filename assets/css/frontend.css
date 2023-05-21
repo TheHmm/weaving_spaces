@@ -1,0 +1,25 @@
+html.frontend body {
+  background: black;
+  color: white;
+  font-size: 18px;
+}
+
+html.frontend button.large {
+  background: linear-gradient(
+    90deg,
+    #d7009b 0%,
+    #00ff0a 56.54%,
+    #f0ffc6 75.41%,
+    #9e00ff 100%
+  );
+  border-radius: 71px;
+  padding: 15px 40px;
+  color: black;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-size: 1.4em;
+}
+
+html.frontend main {
+  background-image: url(/assets/img/bg_grid.png);
+}

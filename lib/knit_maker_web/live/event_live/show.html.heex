@@ -33,7 +33,7 @@
       id="questions"
       row_click={fn q -> JS.navigate(~p"/events/#{@event}/question/#{q}/edit") end}
     >
-      <:col :let={q} label="Rank"><%= q.rank %></:col>
+      <:col :let={q} label="ID"><%= q.id %></:col>
       <:col :let={q} label="Question"><%= q.title %></:col>
       <:col :let={q} label="Type"><%= q.type %></:col>
     </.table>
@@ -74,7 +74,7 @@
     action={@live_action}
     event={@event}
     question={@question}
-    patch={~p"/events/#{@event}"}
+    patch={~p"/events/#{@event}/questions"}
   />
 </.modal>
 
@@ -90,6 +90,6 @@
     title={@page_title}
     action={@live_action}
     event={@event}
-    patch={~p"/events/#{@event}"}
+    patch={~p"/events/#{@event}/questions"}
   />
 </.modal>
