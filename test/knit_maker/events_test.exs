@@ -99,7 +99,7 @@ defmodule KnitMaker.EventsTest do
         description: "some description",
         rank: 42,
         title: "some title",
-        type: "multiple"
+        type: "choices"
       }
 
       event = event_fixture()
@@ -111,7 +111,7 @@ defmodule KnitMaker.EventsTest do
       assert question.description == "some description"
       assert question.rank == 42
       assert question.title == "some title"
-      assert question.type == "multiple"
+      assert question.type == "choices"
     end
 
     test "create_question/1 with invalid data returns error changeset" do
@@ -129,7 +129,7 @@ defmodule KnitMaker.EventsTest do
         description: "some updated description",
         rank: 43,
         title: "some updated title",
-        type: "multiple"
+        type: "choices"
       }
 
       assert {:ok, %Question{} = question} = Events.update_question(question, update_attrs)
@@ -138,7 +138,7 @@ defmodule KnitMaker.EventsTest do
       assert question.description == "some updated description"
       assert question.rank == 43
       assert question.title == "some updated title"
-      assert question.type == "multiple"
+      assert question.type == "choices"
     end
 
     test "update_question/2 with invalid data returns error changeset" do

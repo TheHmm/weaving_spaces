@@ -80,17 +80,44 @@ defmodule KnitMaker.ParticipantsTest do
       assert %Ecto.Changeset{} = Participants.change_response(response)
     end
 
-    test "get pixel data" do
+    test "response update" do
       question = question_fixture()
 
       a = %{
-        json: %{
+        "json" => %{
+          "pixels" => [
+            ["2023-05-21 21:45:30.001447Z", 0, 0, "1"]
+          ]
+        },
+        "participant_id" => "a"
+      }
+
+      {:ok, _} = Participants.create_response(question, a)
+
+      a2 = %{
+        "json" => %{
           "pixels" => [
             ["2023-05-21 21:45:30.001447Z", 0, 0, "1"],
             ["2023-05-21 21:45:34.901371Z", 0, 1, "1"]
           ]
         },
-        participant_id: "a"
+        "participant_id" => "a"
+      }
+
+      {:ok, _} = Participants.create_response(question, a2)
+    end
+
+    test "get pixel data" do
+      question = question_fixture()
+
+      a = %{
+        "json" => %{
+          "pixels" => [
+            ["2023-05-21 21:45:30.001447Z", 0, 0, "1"],
+            ["2023-05-21 21:45:34.901371Z", 0, 1, "1"]
+          ]
+        },
+        "participant_id" => "a"
       }
 
       {:ok, _} = Participants.create_response(question, a)

@@ -57,7 +57,8 @@ defmodule KnitMaker.Participants do
       |> Response.changeset(attrs)
       |> Repo.insert()
 
-    with {:error, %{errors: [participant_id: _]}} <- result do
+    with {:error, %{errors: [participant_id: {_, [constraint: :unique, constraint_name: _]}]}} <-
+           result do
       participant_id = attrs["participant_id"]
 
       [response] =

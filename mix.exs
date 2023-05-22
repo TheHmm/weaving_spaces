@@ -49,7 +49,8 @@ defmodule KnitMaker.MixProject do
       {:plug_cowboy, "~> 2.5"},
       {:swoosh, "~> 1.4"},
       {:hackney, "~> 1.18"},
-      {:earmark, "~> 1.4"}
+      {:earmark, "~> 1.4"},
+      {:unidecode, "~> 1.0"}
     ]
   end
 
