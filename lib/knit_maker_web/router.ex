@@ -71,8 +71,9 @@ defmodule KnitMakerWeb.Router do
     pipe_through [:browser, :participant_session]
 
     live_session :participant do
-      live "/:slug", MainLive, :show
-      live "/:slug/q/:question_id", MainLive, :show_question
+      live "/:slug", MainLive, :start
+      live "/:slug/q/:question_id", MainLive, :question
+      live "/:slug/knitting", MainLive, :result
     end
   end
 

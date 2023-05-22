@@ -4,76 +4,80 @@
   <h1 class="text-4xl text-center tracking-widest uppercase"><%= @event.name %></h1>
 </div>
 
-<%= if assigns[:question] do %>
-  <div class="mx-auto max-w-md text-center">
-    <div class="choices-box">
-      <%= @question.title %>
-
-      <div class={"answers " <> @question.type}>
-        <%= if @question.type == "pixel" do %>
-          <div
-            class="grid"
-            style={"grid-template-columns: " <> to_string(1..@question.config["width"] |> Enum.map(fn _ -> " 1fr" end))}
-          >
-            <%= for y <- 0..(@question.config["height"]-1), x <- 0..(@question.config["height"]-1) do %>
-              <span
-                phx-click={JS.push("set-pixel", value: %{x: x, y: y, col: @pixel[{x, y}]})}
-                phx-hover={JS.push("set-coord", value: %{x: x, y: y, col: @pixel[{x, y}]})}
-                class={"color-" <> @pixel[{x, y}]}
-              >
-              </span>
-            <% end %>
-          </div>
-        <% else %>
-          <%= for {answer, index} <- Enum.with_index(@question.config["answers"] || []) do %>
-            <label
-              phx-click={JS.push("set-answer", value: %{text: answer, value: index})}
-              class={
-                (@responses[@question.id] && @responses[@question.id].value == index && "selected") ||
-                  ""
-              }
-            >
-              <input
-                type="radio"
-                name="q"
-                checked={@responses[@question.id] && @responses[@question.id].value == index}
-              />
-              <%= answer %>
-            </label>
-          <% end %>
-        <% end %>
+<%= cond do %>
+  <% @live_action == :start -> %>
+    <div class="columns-1 sm:columns-2 text-sm py-10 px-4">
+      <div>
+        <h3 class="uppercase tracking-wide mb-4">About the event</h3>
+        <p>
+          Short introduction about the event or whatever else the organiser wants to write here. Ut ac tellus tortor. Donec ut sollicitudin massa, non ultricies nisi. Vestibulum blandit, turpis a euismod efficitur, nibh purus tristique leo, vel placerat orci tortor nec arcu. Suspendisse vestibulum arcu leo.
+        </p>
+      </div>
+      <div>
+        <h3 class="uppercase tracking-wide mb-4">About the app</h3>
+        <p>
+          Short introduction about the premise of the webapp or whatever else the organiser wants to write here. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin quis eros a urna pulvinar condimentum id nec nisl. Donec auctor lacus leo, eget gravida justo venenatis non.
+        </p>
       </div>
     </div>
-  </div>
 
-  <div :if={@next_question} class="mt-4 text-center">
-    <button class="large" phx-click="next">Next</button>
-  </div>
-
-  <div :if={!@next_question} class="mt-4 text-center">
-    <button class="large" phx-click="done">Visualize</button>
-  </div>
-
-  <div class="text-sm text-center py-10">
-    Users online: <%= @online_users %>
-  </div>
-<% else %>
-  <div class="columns-1 sm:columns-2 text-sm py-10 px-4">
-    <div>
-      <h3 class="uppercase tracking-wide mb-4">About the event</h3>
-      <p>
-        Short introduction about the event or whatever else the organiser wants to write here. Ut ac tellus tortor. Donec ut sollicitudin massa, non ultricies nisi. Vestibulum blandit, turpis a euismod efficitur, nibh purus tristique leo, vel placerat orci tortor nec arcu. Suspendisse vestibulum arcu leo.
-      </p>
+    <div class="text-center border-t border-gray-400 mt-4 pt-8 ">
+      <button class="large" phx-click="start">Start</button>
     </div>
-    <div>
-      <h3 class="uppercase tracking-wide mb-4">About the app</h3>
-      <p>
-        Short introduction about the premise of the webapp or whatever else the organiser wants to write here. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin quis eros a urna pulvinar condimentum id nec nisl. Donec auctor lacus leo, eget gravida justo venenatis non.
-      </p>
-    </div>
-  </div>
+  <% @live_action == :question -> %>
+    <div class="mx-auto max-w-md text-center">
+      <div class="choices-box">
+        <%= @question.title %>
 
-  <div class="text-center border-t border-gray-400 mt-4 pt-8 ">
-    <button class="large" phx-click="start">Start</button>
-  </div>
+        <div class={"answers " <> @question.type}>
+          <%= if @question.type == "pixel" do %>
+            <div
+              class="grid"
+              style={"grid-template-columns: " <> to_string(1..@question.config["width"] |> Enum.map(fn _ -> " 1fr" end))}
+            >
+              <%= for y <- 0..(@question.config["height"]-1), x <- 0..(@question.config["height"]-1) do %>
+                <span
+                  phx-click={JS.push("set-pixel", value: %{x: x, y: y, col: @pixel[{x, y}]})}
+                  phx-hover={JS.push("set-coord", value: %{x: x, y: y, col: @pixel[{x, y}]})}
+                  class={"color-" <> @pixel[{x, y}]}
+                >
+                </span>
+              <% end %>
+            </div>
+          <% else %>
+            <%= for {answer, index} <- Enum.with_index(@question.config["answers"] || []) do %>
+              <label
+                phx-click={JS.push("set-answer", value: %{text: answer, value: index})}
+                class={
+                  (@responses[@question.id] && @responses[@question.id].value == index &&
+                     "selected") ||
+                    ""
+                }
+              >
+                <input
+                  type="radio"
+                  name="q"
+                  checked={@responses[@question.id] && @responses[@question.id].value == index}
+                />
+                <%= answer %>
+              </label>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <div :if={@next_question} class="mt-4 text-center">
+      <button class="large" phx-click="next">Next</button>
+    </div>
+
+    <div :if={!@next_question} class="mt-4 text-center">
+      <button class="large" phx-click="knit">Visualize</button>
+    </div>
+  <% @live_action == :result -> %>
+    result
 <% end %>
+
+<div class="text-sm text-center border-t border-gray-400 mt-8 pt-4 ">
+  Users online: <%= @online_users %>
+</div>

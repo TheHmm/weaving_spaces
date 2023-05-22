@@ -42,6 +42,10 @@ defmodule KnitMakerWeb.MainLive do
     {:noreply, redirect(socket, to: ~p"/#{socket.assigns.event.slug}/q/#{id}")}
   end
 
+  def handle_event("knit", %{}, socket) do
+    {:noreply, redirect(socket, to: ~p"/#{socket.assigns.event.slug}/knitting")}
+  end
+
   def handle_event("set-answer", args, socket) do
     {:ok, r} =
       Participants.create_response(
