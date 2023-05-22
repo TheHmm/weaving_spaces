@@ -20,6 +20,10 @@ html.frontend button.large {
   font-size: 1.4em;
   @apply rounded-lg;
 }
+html.frontend button.large:hover {
+  color: white;
+  text-shadow: 1px 1px black;
+}
 
 html.frontend main {
   background-image: url(/assets/img/bg_grid.png);
@@ -68,14 +72,17 @@ html.frontend .choices-box label {
   @apply block;
 }
 
-html.frontend .choices-box .answers.pixel table td span {
-  display: inline-block;
+html.frontend .choices-box .answers.pixel div.grid span {
+  aspect-ratio: 1;
   cursor: pointer;
-  width: 20px;
-  height: 0;
-  padding-bottom: 100%;
   background: black;
 }
-html.frontend .choices-box .answers.pixel table td.color-1 span {
+html.frontend .choices-box .answers.pixel div.grid span:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+html.frontend .choices-box .answers.pixel div.grid span.color-1 {
   background: white;
+}
+html.frontend .choices-box .answers.pixel div.grid span.color-1:hover {
+  background: rgba(255, 255, 255, 0.8);
 }

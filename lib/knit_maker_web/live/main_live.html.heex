@@ -11,20 +11,19 @@
 
       <div class={"answers " <> @question.type}>
         <%= if @question.type == "pixel" do %>
-          <table class="mx-auto">
-            <%= for y <- 0..(@question.config["height"]-1) do %>
-              <tr>
-                <%= for x <- 0..(@question.config["height"]-1) do %>
-                  <td
-                    phx-click={JS.push("set-pixel", value: %{x: x, y: y, col: @pixel[{x, y}]})}
-                    class={"color-" <> @pixel[{x, y}]}
-                  >
-                    <span></span>
-                  </td>
-                <% end %>
-              </tr>
+          <div
+            class="grid"
+            style={"grid-template-columns: " <> to_string(1..@question.config["width"] |> Enum.map(fn _ -> " 1fr" end))}
+          >
+            <%= for y <- 0..(@question.config["height"]-1), x <- 0..(@question.config["height"]-1) do %>
+              <span
+                phx-click={JS.push("set-pixel", value: %{x: x, y: y, col: @pixel[{x, y}]})}
+                phx-hover={JS.push("set-coord", value: %{x: x, y: y, col: @pixel[{x, y}]})}
+                class={"color-" <> @pixel[{x, y}]}
+              >
+              </span>
             <% end %>
-          </table>
+          </div>
         <% else %>
           <%= for {answer, index} <- Enum.with_index(@question.config["answers"] || []) do %>
             <label
@@ -53,6 +52,10 @@
 
   <div :if={!@next_question} class="mt-4 text-center">
     <button class="large" phx-click="done">Visualize</button>
+  </div>
+
+  <div class="text-sm text-center py-10">
+    Users online: <%= @online_users %>
   </div>
 <% else %>
   <div class="columns-1 sm:columns-2 text-sm py-10 px-4">

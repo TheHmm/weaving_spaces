@@ -2,13 +2,13 @@ defmodule KnitMakerWeb.MainLive do
   use KnitMakerWeb, :live_view
 
   alias KnitMaker.{Events, Participants}
+  alias KnitMakerWeb.Presence
 
   @impl true
   def mount(%{"question_id" => question_id} = params, session, socket) do
     socket =
       socket
-      |> assign(:participant_id, session["participant_id"])
-      |> load_all(params)
+      |> init_participant(params, session)
 
     %{questions: questions} = socket.assigns
     idx = Enum.find_index(questions, &(to_string(&1.id) == question_id))
@@ -28,7 +28,7 @@ defmodule KnitMakerWeb.MainLive do
   end
 
   def mount(params, session, socket) do
-    {:ok, assign(socket, :participant_id, session["participant_id"]) |> load_all(params)}
+    {:ok, init_participant(socket, params, session)}
   end
 
   @impl true
@@ -76,22 +76,42 @@ defmodule KnitMakerWeb.MainLive do
     {:noreply, reload_responses(socket) |> reload_pixel()}
   end
 
+  @impl true
   def handle_info(:reload_pixel, socket) do
     {:noreply, reload_pixel(socket)}
+  end
+
+  def handle_info(%{event: "presence_diff"}, socket) do
+    {:noreply, reload_participant_list(socket)}
   end
 
   defp opposite("0"), do: "1"
   defp opposite("1"), do: "0"
 
-  defp load_all(socket, %{"slug" => slug}) do
-    event = Events.get_event_by_slug!(slug)
+  defp init_participant(socket, params, session) do
+    event = Events.get_event_by_slug!(params["slug"])
     questions = Events.list_questions(event.id)
+
+    participant_id = session["participant_id"]
+
+    Presence.track(self(), "event-#{event.id}", participant_id, %{
+      "participant_id" => participant_id
+    })
+
+    Phoenix.PubSub.subscribe(KnitMaker.PubSub, "event-#{event.id}")
 
     socket
     |> assign(:app, "frontend")
     |> assign(:event, event)
     |> assign(:questions, questions)
+    |> assign(:participant_id, participant_id)
     |> reload_responses()
+    |> reload_participant_list()
+  end
+
+  defp reload_participant_list(socket) do
+    online_users = Presence.list("event-#{socket.assigns.event.id}") |> Enum.count()
+    socket |> assign(:online_users, online_users)
   end
 
   defp reload_responses(socket) do

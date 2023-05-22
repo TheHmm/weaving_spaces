@@ -14,6 +14,8 @@ defmodule KnitMaker.Application do
       KnitMaker.Repo,
       # Start the PubSub system
       {Phoenix.PubSub, name: KnitMaker.PubSub},
+      # presence
+      KnitMakerWeb.Presence,
       # Start the Endpoint (http/https)
       KnitMakerWeb.Endpoint
       # Start a worker by calling: KnitMaker.Worker.start_link(arg)
