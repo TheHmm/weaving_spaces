@@ -8,6 +8,8 @@ defmodule KnitMaker.Application do
   @impl true
   def start(_type, _args) do
     children = [
+      {Registry, keys: :unique, name: KnitMaker.KnittingRegistry},
+      KnitMaker.KnittingSupervisor,
       # Start the Telemetry supervisor
       KnitMakerWeb.Telemetry,
       # Start the Ecto repository

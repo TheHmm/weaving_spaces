@@ -75,7 +75,11 @@
       <button class="large" phx-click="knit">Visualize</button>
     </div>
   <% @live_action == :result -> %>
-    result
+    <div class="knitting-before h-20"></div>
+    <div class="knitting">
+      <%= @knitting %>
+    </div>
+    <div class="knitting-before -scale-100 h-20"></div>
 <% end %>
 
 <div class="text-sm text-center border-t border-gray-400 mt-8 pt-4 ">

@@ -86,3 +86,21 @@ html.frontend .choices-box .answers.pixel div.grid span.color-1 {
 html.frontend .choices-box .answers.pixel div.grid span.color-1:hover {
   background: rgba(255, 255, 255, 0.8);
 }
+
+html.frontend div.knitting .grid {
+  background: #000278;
+}
+html.frontend div.knitting .grid span {
+  aspect-ratio: 1;
+}
+html.frontend div.knitting .grid span.c1 {
+  background: #be0044;
+}
+html.frontend div.knitting-before {
+  background: linear-gradient(
+    180deg,
+    rgba(190, 0, 68, 0) 0%,
+    #be0044 70%,
+    #000278 100%
+  );
+}
