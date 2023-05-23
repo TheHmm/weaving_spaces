@@ -2,17 +2,19 @@ defmodule KnitMaker.Events.Question do
   use Ecto.Schema
   import Ecto.Changeset
 
+  alias KnitMaker.Events.Event
+
   schema "questions" do
-    field :name, :string
+    field(:name, :string)
 
-    field :code, :string
-    field :config, :map, default: %{}
-    field :description, :string
-    field :rank, :integer
-    field :title, :string
-    field :type, :string
+    field(:code, :string)
+    field(:config, :map, default: %{})
+    field(:description, :string)
+    field(:rank, :integer)
+    field(:title, :string)
+    field(:type, :string)
 
-    belongs_to :event, KnitMaker.Events.Event
+    belongs_to(:event, Event)
 
     timestamps()
   end

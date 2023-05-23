@@ -32,6 +32,20 @@ defmodule KnitMaker.Participants do
     |> Repo.all()
   end
 
+  def grouped_responses_by_event(event_id) do
+    from(r in Response,
+      join: q in assoc(r, :question),
+      where: r.event_id == ^event_id,
+      select: {q.name, r.value, count(r.id)},
+      group_by: [q.name, r.value]
+    )
+    |> Repo.all()
+    |> Enum.group_by(&elem(&1, 0))
+    |> Map.new(fn {q, group} ->
+      {q, group |> Map.new(fn {_q, k, v} -> {k, v} end)}
+    end)
+  end
+
   @doc """
   Gets a single response.
 

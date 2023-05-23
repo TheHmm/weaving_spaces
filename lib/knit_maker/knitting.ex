@@ -49,7 +49,7 @@ defmodule KnitMaker.Knitting do
   end
 
   defp render(state) do
-    pat = Visualizer.render()
+    pat = Visualizer.render(state.event_id)
     rendered = LiveRender.render(%{pat: pat})
     Map.put(state, :rendered, rendered)
   end

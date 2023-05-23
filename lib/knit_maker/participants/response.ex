@@ -2,13 +2,16 @@ defmodule KnitMaker.Participants.Response do
   use Ecto.Schema
   import Ecto.Changeset
 
+  alias KnitMaker.Events.{Event, Question}
+
   schema "responses" do
     field :json, :map
     field :participant_id, :string
     field :text, :string
     field :value, :integer
-    field :event_id, :id
-    field :question_id, :id
+
+    belongs_to :event, Event
+    belongs_to :question, Question
 
     timestamps()
   end

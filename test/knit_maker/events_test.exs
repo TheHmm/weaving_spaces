@@ -2,6 +2,7 @@ defmodule KnitMaker.EventsTest do
   use KnitMaker.DataCase
 
   alias KnitMaker.Events
+  alias KnitMaker.Repo
 
   describe "events" do
     alias KnitMaker.Events.Event
@@ -32,6 +33,29 @@ defmodule KnitMaker.EventsTest do
       assert event.description == "some description"
       assert event.image_url == "some image_url"
       assert event.name == "some name"
+    end
+
+    test "create_event/1 with question assocs" do
+      valid_attrs = %{
+        slug: "a",
+        name: "a",
+        questions: [
+          %{
+            rank: 1,
+            config: %{"a" => 1},
+            title: "x",
+            type: "choices",
+            name: "x"
+          }
+        ]
+      }
+
+      assert {:ok, %Event{} = event} = Events.create_event(valid_attrs)
+      event = Repo.preload(event, :questions)
+
+      assert [%{config: %{"a" => 1}}] = event.questions
+
+      Event.raw(event) |> IO.inspect(label: "u")
     end
 
     test "create_event/1 with invalid data returns error changeset" do

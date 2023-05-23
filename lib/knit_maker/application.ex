@@ -7,6 +7,8 @@ defmodule KnitMaker.Application do
 
   @impl true
   def start(_type, _args) do
+    KnitMaker.Release.migrate()
+
     children = [
       {Registry, keys: :unique, name: KnitMaker.KnittingRegistry},
       KnitMaker.KnittingSupervisor,
