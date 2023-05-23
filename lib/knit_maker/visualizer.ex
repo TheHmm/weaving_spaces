@@ -21,8 +21,6 @@ defmodule KnitMaker.Visualizer do
     sep2 = sep |> border_top(from_string("10"))
 
     question_lookup = Map.new(event.questions, &{&1.name, &1})
-    #    IO.inspect(question_lookup, label: "question_lookup")
-
     responses = Participants.grouped_responses_by_event(event_id)
 
     {event_date, event_title} = event_data(event, width)
@@ -56,6 +54,8 @@ defmodule KnitMaker.Visualizer do
     |> pad(1, "1")
     |> fit(width, nil, bg: "0")
   end
+
+  defp emotion_image(nil, width), do: new(width, 1, "0")
 
   defp emotion_image(response, width) do
     emotion = response |> max_answer() || 0
@@ -140,6 +140,8 @@ defmodule KnitMaker.Visualizer do
     {date, title}
   end
 
+  defp abstract_answer(nil, width), do: new(width, 1, "0")
+
   defp abstract_answer(lookup, width) do
     IO.inspect(lookup, label: "lookup")
 
@@ -155,6 +157,8 @@ defmodule KnitMaker.Visualizer do
     |> concat_v()
     |> fit(width, nil, bg: "0")
   end
+
+  defp answer_texts(nil, width), do: new(width, 1, "0")
 
   defp answer_texts(lookup, width) do
     IO.inspect(lookup, label: "lookup")
