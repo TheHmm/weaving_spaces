@@ -35,7 +35,7 @@ defmodule KnitMaker.Events do
       ** (Ecto.NoResultsError)
 
   """
-  def get_event!(id), do: Repo.get!(Event, id)
+  def get_event!(id), do: Repo.get!(Event, id) |> Repo.preload(:questions)
 
   def get_event_by_slug!(slug), do: Repo.get_by!(Event, slug: slug)
 

@@ -4,6 +4,16 @@ defmodule Pat do
 
   alias Pat.Font
 
+  def from_file(filename) do
+    result =
+      Application.app_dir(:knit_maker, "priv/" <> filename)
+      |> Pixels.read_file()
+
+    with {:ok, pixels} <- result do
+      Pat.Image.from_pixels(pixels)
+    end
+  end
+
   def from_string(string) do
     rows = String.split(string, "\n")
     w = String.length(List.first(rows))

@@ -50,7 +50,8 @@ defmodule KnitMaker.MixProject do
       {:swoosh, "~> 1.4"},
       {:hackney, "~> 1.18"},
       {:earmark, "~> 1.4"},
-      {:unidecode, "~> 1.0"}
+      {:unidecode, "~> 1.0"},
+      {:pixels, ">= 0.0.0"}
     ]
   end
 

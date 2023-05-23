@@ -142,6 +142,10 @@ defmodule KnitMaker.Participants do
     Response.changeset(response, attrs)
   end
 
+  def get_pixels(%Question{} = q) do
+    get_pixels(q.id, q.config["width"], q.config["height"])
+  end
+
   def get_pixels(question_id, w, h) do
     from(r in Response,
       where: r.question_id == ^question_id,

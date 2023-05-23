@@ -7,6 +7,11 @@ defmodule PatTest do
       assert "1001" == c.data
     end
 
+    test "from file" do
+      Pat.from_file("knit_images/emotion0.png")
+      |> IO.puts()
+    end
+
     test "transform" do
       c = Pat.new(3, 3) |> Pat.set(0, 0, "1") |> Pat.set(1, 1, "1")
       assert "000010100" = Pat.transform(c, :hflip).data
