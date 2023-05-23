@@ -25,42 +25,41 @@ defmodule KnitMaker.Visualizer do
 
     responses = Participants.grouped_responses_by_event(event_id)
 
-    online_count = responses["online"][0] || 0
-    onsite_count = responses["online"][1] || 0
-    IO.inspect(responses["online"])
-
-    emotion = responses["emotion"] |> max_answer() || 0
-    IO.inspect(emotion, label: "emotion")
-
     {event_date, event_title} = event_data(event, width)
 
-    pixels =
-      Participants.get_pixels(question_lookup["pixels"])
-      |> pad(1, "0")
-      |> pad(1, "1")
-      |> fit(width, nil, bg: "0")
-
-    emotion = from_file("knit_images/emotion#{emotion}.png") |> fit(width, nil, bg: "0")
-    #    new_text("123 hello world xx\n#{t}", font: :knit, stride: 1)
     concat_v([
-      stripes_count_h(width, online_count, @online_pattern),
+      stripes_count_h(width, responses["online"][0] || 0, @online_pattern),
       sep,
       event_title,
       sep,
-      sep2,
-      sep,
-      emotion,
+      abstract_answer(responses["connected"], width),
       sep,
       sep2,
       sep,
-      pixels,
+      emotion_image(responses["emotion"], width),
+      sep,
+      sep2,
+      sep,
+      pixels(question_lookup["pixels"], width),
       sep,
       sep2,
       sep,
       event_date,
       sep,
-      stripes_count_v(width, onsite_count, @onsite_pattern)
+      stripes_count_v(width, responses["online"][1] || 0, @onsite_pattern)
     ])
+  end
+
+  defp pixels(question, width) do
+    Participants.get_pixels(question)
+    |> pad(1, "0")
+    |> pad(1, "1")
+    |> fit(width, nil, bg: "0")
+  end
+
+  defp emotion_image(response, width) do
+    emotion = response |> max_answer() || 0
+    from_file("knit_images/emotion#{emotion}.png") |> fit(width, nil, bg: "0")
   end
 
   defp stripes_count_h(width, count, pat) do
@@ -139,5 +138,37 @@ defmodule KnitMaker.Visualizer do
       |> fit(width, nil, bg: "0")
 
     {date, title}
+  end
+
+  defp abstract_answer(lookup, width) do
+    IO.inspect(lookup, label: "lookup")
+
+    Enum.sort_by(lookup, &elem(&1, 1))
+    |> Enum.reverse()
+    |> Enum.with_index()
+    |> Enum.map(fn {{answer, _value}, size} ->
+      answer_file = "knit_images/a#{answer}s#{size}.png"
+      IO.inspect(answer_file, label: "answer_file")
+
+      from_file(answer_file)
+    end)
+    |> concat_v()
+    |> fit(width, nil, bg: "0")
+  end
+
+  defp answer_texts(lookup, width) do
+    IO.inspect(lookup, label: "lookup")
+
+    Enum.sort_by(lookup, &elem(&1, 1))
+    |> Enum.reverse()
+    |> Enum.with_index()
+    |> Enum.map(fn {{answer, _value}, size} ->
+      answer_file = "knit_images/a#{answer}s#{size}.png"
+      IO.inspect(answer_file, label: "answer_file")
+
+      from_file(answer_file)
+    end)
+    |> concat_v()
+    |> fit(width, nil, bg: "0")
   end
 end

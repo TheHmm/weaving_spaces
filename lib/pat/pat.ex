@@ -7,7 +7,8 @@ defmodule Pat do
   def from_file(filename) do
     result =
       Application.app_dir(:knit_maker, "priv/" <> filename)
-      |> Pixels.read_file()
+      |> File.read!()
+      |> Pixels.read()
 
     with {:ok, pixels} <- result do
       Pat.Image.from_pixels(pixels)
