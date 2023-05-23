@@ -11,7 +11,6 @@ defmodule KnitMaker.Visualizer do
 
   def render(event_id) do
     event = Events.get_event!(event_id)
-    IO.inspect(event, label: "event")
 
     # for padding
     width = @final_width - 0
@@ -50,8 +49,7 @@ defmodule KnitMaker.Visualizer do
 
   defp pixels(question, width) do
     Participants.get_pixels(question)
-    |> pad(1, "0")
-    |> pad(1, "1")
+    |> double()
     |> fit(width, nil, bg: "0")
   end
 
@@ -105,7 +103,9 @@ defmodule KnitMaker.Visualizer do
       end
 
     last_row_count = rem(count, per_row)
-    last_row = repeat_h(pat, last_row_count) |> fit(width, pat.h, pos: :left, bg: "0")
+
+    last_row =
+      invert_repeat(pat, last_row_count) |> concat_h() |> fit(width, pat.h, pos: :left, bg: "0")
 
     #    new(width, rows * pat.h)
     (full_rows ++ [last_row])

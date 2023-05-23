@@ -500,4 +500,24 @@ defmodule Pat do
     offset = pat.w * y + x
     {:ok, String.at(pat.data, offset)}
   end
+
+  def mass_put_pixels(pat, xy_map) do
+    data =
+      [
+        for {row, y} <- Enum.with_index(rows(pat)),
+            {pixel, x} <- Enum.with_index(String.split(row, "", trim: true)) do
+          {{y, x}, pixel}
+        end,
+        for {{x, y}, pixel} <- xy_map do
+          {{y, x}, pixel}
+        end
+      ]
+      |> List.flatten()
+      |> Map.new()
+      |> Enum.sort()
+      |> Enum.map(&elem(&1, 1))
+      |> to_string()
+
+    %{pat | data: data}
+  end
 end

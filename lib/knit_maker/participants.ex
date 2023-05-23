@@ -147,15 +147,16 @@ defmodule KnitMaker.Participants do
   end
 
   def get_pixels(question_id, w, h) do
-    from(r in Response,
-      where: r.question_id == ^question_id,
-      select: r.json["pixels"]
-    )
-    |> Repo.all()
-    |> Enum.flat_map(&Jason.decode!/1)
-    |> Enum.sort()
-    |> Enum.reduce(Pat.new(w, h), fn [_date, x, y, p], pat ->
-      Pat.set(pat, x, y, p)
-    end)
+    pixels =
+      from(r in Response,
+        where: r.question_id == ^question_id,
+        select: r.json["pixels"]
+      )
+      |> Repo.all()
+      |> Enum.flat_map(&Jason.decode!/1)
+      |> Enum.sort()
+      |> Map.new(fn [_date, x, y, p] -> {{x, y}, p} end)
+
+    Pat.new(w, h) |> Pat.mass_put_pixels(pixels)
   end
 end

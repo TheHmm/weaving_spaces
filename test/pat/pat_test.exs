@@ -8,8 +8,7 @@ defmodule PatTest do
     end
 
     test "from file" do
-      Pat.from_file("knit_images/emotion0.png")
-      |> IO.puts()
+      assert %{data: "0000" <> _} = Pat.from_file("knit_images/emotion0.png")
     end
 
     test "transform" do
@@ -245,5 +244,11 @@ defmodule PatTest do
 
   test "fit" do
     assert "1" = Pat.from_string("0\n1\n0") |> Pat.fit(1, 1) |> to_string()
+  end
+
+  test "mass_put_pixels" do
+    pat = Pat.new(5, 5)
+
+    assert %{data: "101000" <> _} = Pat.mass_put_pixels(pat, %{{0, 0} => "1", {2, 0} => "1"})
   end
 end
