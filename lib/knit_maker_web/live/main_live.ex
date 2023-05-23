@@ -46,6 +46,10 @@ defmodule KnitMakerWeb.MainLive do
     {:noreply, redirect(socket, to: ~p"/#{socket.assigns.event.slug}/knitting")}
   end
 
+  def handle_event("download", %{}, socket) do
+    {:noreply, redirect(socket, to: ~p"/image/event/#{socket.assigns.event.id}")}
+  end
+
   def handle_event("set-answer", args, socket) do
     {:ok, r} =
       Participants.create_response(

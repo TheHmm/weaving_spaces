@@ -251,4 +251,13 @@ defmodule PatTest do
 
     assert %{data: "101000" <> _} = Pat.mass_put_pixels(pat, %{{0, 0} => "1", {2, 0} => "1"})
   end
+
+  test "to pixel data" do
+    pat = Pat.from_string("1100\n0011")
+    assert %Pixels{} = pixels = Pat.to_pixels(pat, %{"1" => "#ffffff", "0" => "#ffcc00"})
+
+    assert pixels.width == pat.w
+    assert pixels.height == pat.h
+    IO.inspect(pixels.data, label: "pixels.data")
+  end
 end

@@ -520,4 +520,24 @@ defmodule Pat do
 
     %{pat | data: data}
   end
+
+  def to_pixels(%Pat{} = pat, color_mapping) do
+    color_mapping = Map.new(color_mapping, fn {k, v} -> {k, color_to_binary(v)} end)
+
+    data =
+      pat.data
+      |> String.split("", trim: true)
+      |> Enum.map(fn p -> Map.fetch!(color_mapping, p) end)
+      |> IO.iodata_to_binary()
+
+    %Pixels{data: data, width: pat.w, height: pat.h}
+  end
+
+  defp color_to_binary(<<?#, color::binary-size(6)>>) do
+    color_to_binary(color)
+  end
+
+  defp color_to_binary(<<r::binary-size(2), g::binary-size(2), b::binary-size(2)>>) do
+    <<String.to_integer(r, 16), String.to_integer(g, 16), String.to_integer(b, 16), 255>>
+  end
 end

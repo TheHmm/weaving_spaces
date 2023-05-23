@@ -143,14 +143,11 @@ defmodule KnitMaker.Visualizer do
   defp abstract_answer(nil, width), do: new(width, 1, "0")
 
   defp abstract_answer(lookup, width) do
-    IO.inspect(lookup, label: "lookup")
-
     Enum.sort_by(lookup, &elem(&1, 1))
     |> Enum.reverse()
     |> Enum.with_index()
     |> Enum.map(fn {{answer, _value}, size} ->
       answer_file = "knit_images/a#{answer}s#{size}.png"
-      IO.inspect(answer_file, label: "answer_file")
 
       from_file(answer_file)
     end)
@@ -161,14 +158,11 @@ defmodule KnitMaker.Visualizer do
   defp answer_texts(nil, width), do: new(width, 1, "0")
 
   defp answer_texts(lookup, width) do
-    IO.inspect(lookup, label: "lookup")
-
     Enum.sort_by(lookup, &elem(&1, 1))
     |> Enum.reverse()
     |> Enum.with_index()
     |> Enum.map(fn {{answer, _value}, size} ->
       answer_file = "knit_images/a#{answer}s#{size}.png"
-      IO.inspect(answer_file, label: "answer_file")
 
       from_file(answer_file)
     end)

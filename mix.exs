@@ -51,7 +51,7 @@ defmodule KnitMaker.MixProject do
       {:hackney, "~> 1.18"},
       {:earmark, "~> 1.4"},
       {:unidecode, "~> 1.0"},
-      {:pixels, ">= 0.0.0"}
+      {:pixels, "~> 0.3"}
     ]
   end
 

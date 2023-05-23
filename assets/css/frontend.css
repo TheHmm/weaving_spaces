@@ -30,7 +30,7 @@ html.frontend main {
 }
 
 html.frontend .choices-box {
-  @apply p-8 bg-gray-600 rounded-lg mx-4 bg-neutral-500;
+  @apply p-8 rounded-lg mx-4 bg-neutral-500;
 }
 
 html.frontend .choices-box > .answers {
@@ -61,6 +61,10 @@ html.frontend .choices-box > .answers.choices-gradient label:last-child {
 html.frontend .choices-box > .answers.choices-2column {
   @apply columns-2 space-y-4;
 }
+html.frontend .choices-box > .answers.choices-2column label {
+  @apply whitespace-nowrap;
+}
+
 html.frontend .choices-box > .answers.choices {
   @apply space-y-4;
 }

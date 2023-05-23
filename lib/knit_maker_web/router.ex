@@ -75,6 +75,8 @@ defmodule KnitMakerWeb.Router do
       live "/:slug/q/:question_id", MainLive, :question
       live "/:slug/knitting", MainLive, :result
     end
+
+    get "/image/event/:id", ImageController, :render
   end
 
   scope "/", KnitMakerWeb do
