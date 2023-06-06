@@ -125,6 +125,18 @@ defmodule KnitMaker.ParticipantsTest do
       assert %Pat{} = Participants.get_pixels(question.id, 10, 10)
     end
 
+    test "event_stats" do
+      event = event_fixture()
+      question = question_fixture(event)
+
+      {:ok, _} = Participants.create_response(question, %{participant_id: "a", value: 42})
+      {:ok, _} = Participants.create_response(question, %{participant_id: "b", value: 42})
+      {:ok, _} = Participants.create_response(question, %{participant_id: "c", value: 43})
+
+      assert %{participant_count: 3} =
+               Participants.get_event_stats(event.id) |> IO.inspect(label: "u")
+    end
+
     test "grouped_responses_by_event" do
       event = event_fixture()
       question = question_fixture(event)

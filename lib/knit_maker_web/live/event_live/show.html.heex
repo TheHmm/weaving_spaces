@@ -1,5 +1,5 @@
 <.header>
-  Event: <%= @event.name %>
+  <%= @event.name %>
 
   <:actions>
     <.link patch={~p"/events/#{@event}/edit"} phx-click={JS.push_focus()}>
@@ -21,8 +21,20 @@
   <.list>
     <:item title="Slug"><%= @event.slug %></:item>
     <:item title="Name"><%= @event.name %></:item>
-    <:item title="Description"><%= @event.description %></:item>
-    <:item title="Image url"><%= @event.image_url %></:item>
+    <:item title="Date"><%= @event.description %></:item>
+    <:item title="Participants"><%= @event_stats.participant_count %></:item>
+    <:item title="Questions answered"><%= @event_stats.answer_count %></:item>
+    <:item title="Actions">
+      <.link patch={~p"/#{@event.slug}"} phx-click={JS.push_focus()}>
+        <.button>Share event link</.button>
+      </.link>
+      <.link patch={~p"/#{@event.slug}/knitting"} phx-click={JS.push_focus()}>
+        <.button class="bg-zinc-500">Live knitting</.button>
+      </.link>
+      <.link href={~p"/image/event/#{@event}"} target="_blank">
+        <.button class="bg-zinc-500">.PNG</.button>
+      </.link>
+    </:item>
   </.list>
 </div>
 
@@ -34,7 +46,10 @@
       row_click={fn q -> JS.navigate(~p"/events/#{@event}/question/#{q}/edit") end}
     >
       <:col :let={q} label="ID"><%= q.id %></:col>
-      <:col :let={q} label="Question"><%= q.title %></:col>
+      <:col :let={q} label="Question">
+        <div><%= q.title %></div>
+        <div class="text-xs text-neutral-400"><%= q.name %></div>
+      </:col>
       <:col :let={q} label="Type"><%= q.type %></:col>
     </.table>
   </div>

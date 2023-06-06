@@ -20,8 +20,7 @@ defmodule KnitMakerWeb.EventLive.FormComponent do
       >
         <.input field={@form[:slug]} type="text" label="Slug" required />
         <.input field={@form[:name]} type="text" label="Name" required />
-        <.input field={@form[:description]} type="text" label="Description" />
-        <.input field={@form[:image_url]} type="text" label="Image url" />
+        <.input field={@form[:description]} type="text" label="Date" />
         <:actions>
           <.button phx-disable-with="Saving...">Save Event</.button>
         </:actions>

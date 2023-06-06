@@ -46,6 +46,17 @@ defmodule KnitMaker.Participants do
     end)
   end
 
+  def get_event_stats(event_id) do
+    from(r in Response,
+      select: %{
+        participant_count: count(fragment("distinct ?", r.participant_id)),
+        answer_count: count(r.id)
+      },
+      where: r.event_id == ^event_id
+    )
+    |> Repo.one()
+  end
+
   @doc """
   Gets a single response.
 

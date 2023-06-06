@@ -2,6 +2,7 @@ defmodule KnitMakerWeb.EventLive.Show do
   use KnitMakerWeb, :live_view
 
   alias KnitMaker.Events
+  alias KnitMaker.Participants
 
   @impl true
   def mount(_params, _session, socket) do
@@ -14,6 +15,7 @@ defmodule KnitMakerWeb.EventLive.Show do
       socket
       |> assign(:page_title, page_title(socket.assigns.live_action))
       |> assign(:event, Events.get_event!(id))
+      |> assign(:event_stats, Participants.get_event_stats(id))
       |> assign(:questions, Events.list_questions(id))
 
     socket =
