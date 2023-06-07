@@ -48,6 +48,7 @@ defmodule KnitMaker.Events.Question do
   end
 
   def v_types() do
-    ~w(emoji patterns-all patterns-1 patterns-2 patterns-3 patterns-4 gridfill gridfill-double textbars textbars-single border-count pixel skip)
+    #    ~w(emoji patterns-all patterns-1 patterns-2 patterns-3 patterns-4 gridfill gridfill-double textbars textbars-single border-count pixel skip)
+    ~w(emoji patterns-all gridfill gridfill-double border-count pixel skip)
   end
 end
