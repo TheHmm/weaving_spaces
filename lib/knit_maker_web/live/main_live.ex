@@ -152,7 +152,7 @@ defmodule KnitMakerWeb.MainLive do
     socket
     |> assign(
       :pixel,
-      if question.type == "pixel" do
+      if question.q_type == "pixel" do
         Participants.get_pixels(
           question.id,
           question.config["width"],

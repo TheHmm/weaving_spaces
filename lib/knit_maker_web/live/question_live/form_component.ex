@@ -20,35 +20,54 @@ defmodule KnitMakerWeb.QuestionLive.FormComponent do
             link_to={~p"/events/#{@event}/question/#{@question}/edit"}
           />
           <:tab
-            title="Configuration"
+            title="Question"
             selected={@action == :config_question}
             link_to={~p"/events/#{@event}/question/#{@question}/config"}
           />
+          <:tab
+            :if={v_config_schema(@form[:v_type])}
+            title="Visualization"
+            selected={@action == :visualize_question}
+            link_to={~p"/events/#{@event}/question/#{@question}/visualize"}
+          />
         </.tab_bar>
+
+
       <% end %>
 
-      <.simple_form
-        for={@form}
-        id="question-form"
-        phx-target={@myself}
-        phx-change="validate"
-        phx-submit="save"
-      >
-        <%= if @action == :config_question do %>
-          <.rjsf field={@form[:config]} schema={config_schema(@form[:type])} label="Config" />
-        <% else %>
-          <.input field={@form[:title]} type="text" label="Title" />
-          <div class="grid grid-cols-2 gap-4">
-            <.input
-              field={@form[:type]}
-              type="select"
-              label="Type"
-              options={KnitMaker.Events.Question.types()}
+    <.simple_form for={@form} id="question-form" phx-target={@myself}
+    phx-change="validate"
+    phx-submit="save" >
+        <%= cond do %>
+          <% @action == :config_question -> %>
+            <.rjsf field={@form[:q_config]} schema={q_config_schema(@form[:q_type])} label="Config" />
+          <% @action == :visualize_question -> %>
+            <.rjsf
+              :if={v_config_schema(@form[:v_type])}
+              field={@form[:v_config]}
+              schema={v_config_schema(@form[:v_type])}
+              ui_schema={v_config_ui_schema(@form[:v_type])}
+              label="Visualization config"
             />
-            <.input field={@form[:rank]} type="number" label="Rank" />
-          </div>
-          <.input field={@form[:description]} type="text" label="Description" />
-          <.input field={@form[:name]} type="text" label="Name (for pattern generator)" />
+          <% true -> %>
+            <.input field={@form[:title]} type="text" label="Title" />
+            <div class="grid grid-cols-3 gap-4">
+              <.input
+                field={@form[:q_type]}
+                type="select"
+                label="Type"
+                options={KnitMaker.Events.Question.q_types()}
+              />
+              <.input
+                field={@form[:v_type]}
+                type="select"
+                label="Visualization"
+                options={KnitMaker.Events.Question.v_types()}
+              />
+              <.input field={@form[:rank]} type="number" label="Rank" />
+            </div>
+            <.input field={@form[:description]} type="text" label="Description" />
+            <.input field={@form[:name]} type="text" label="Name (for pattern generator)" />
         <% end %>
         <:actions>
           <.button phx-disable-with="Saving...">Save Question</.button>
@@ -58,7 +77,7 @@ defmodule KnitMakerWeb.QuestionLive.FormComponent do
     """
   end
 
-  def config_schema(%{value: "pixel"}) do
+  def q_config_schema(%{value: "pixel"}) do
     %{
       "properties" => %{
         "max_pixels" => %{
@@ -78,7 +97,7 @@ defmodule KnitMakerWeb.QuestionLive.FormComponent do
     }
   end
 
-  def config_schema(_) do
+  def q_config_schema(_) do
     %{
       "properties" => %{
         "answers" => %{
@@ -92,10 +111,34 @@ defmodule KnitMakerWeb.QuestionLive.FormComponent do
     }
   end
 
-  attr :field, Phoenix.HTML.FormField, required: true
-  attr :label, :string, required: true
-  attr :schema, :map, required: true
-  attr :ui_schema, :map
+  def v_config_schema(%{value: f}) when f in ~w(gridfill gridfill-double) do
+    %{"properties" => %{"height" => %{"type" => "number"}}}
+  end
+
+  def v_config_schema(%{value: "border-count"}) do
+    %{
+      "properties" => %{
+        "top_pattern" => %{"type" => "string"},
+        "bottom_pattern" => %{"type" => "string"}
+      }
+    }
+  end
+
+  def v_config_schema(_), do: nil
+
+  def v_config_ui_schema(%{value: "border-count"}) do
+    %{
+      "top_pattern" => %{"ui:widget" => "textarea"},
+      "bottom_pattern" => %{"ui:widget" => "textarea"}
+    }
+  end
+
+  def v_config_ui_schema(_), do: nil
+
+  attr(:field, Phoenix.HTML.FormField, required: true)
+  attr(:label, :string, required: true)
+  attr(:schema, :map, required: true)
+  attr(:ui_schema, :map)
 
   def rjsf(assigns) do
     assigns = assigns |> assign_new(:ui_schema, fn -> %{} end)

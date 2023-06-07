@@ -8,11 +8,14 @@ defmodule KnitMaker.Events.Question do
     field(:name, :string)
 
     field(:code, :string)
-    field(:config, :map, default: %{})
     field(:description, :string)
     field(:rank, :integer)
     field(:title, :string)
-    field(:type, :string)
+    field(:q_config, :map, default: %{})
+    field(:q_type, :string, default: "choices")
+
+    field(:v_config, :map, default: %{})
+    field(:v_type, :string, default: "skip")
 
     belongs_to(:event, Event)
 
@@ -22,10 +25,12 @@ defmodule KnitMaker.Events.Question do
   @doc false
   def changeset(question, attrs) do
     question
-    |> cast(attrs, [:title, :name, :rank, :type, :description, :code])
-    |> json_decode(:config, attrs["config"] || attrs[:config])
-    |> validate_required([:title, :name, :rank, :type])
-    |> validate_inclusion(:type, types())
+    |> cast(attrs, [:title, :name, :rank, :q_type, :v_type, :description, :code])
+    |> json_decode(:q_config, attrs["q_config"] || attrs[:q_config])
+    |> json_decode(:v_config, attrs["v_config"] || attrs[:v_config])
+    |> validate_required([:title, :name, :rank, :v_type, :q_type])
+    |> validate_inclusion(:q_type, q_types())
+    |> validate_inclusion(:v_type, v_types())
     |> validate_format(:name, ~r/^[a-z][a-z0-9_]*$/)
   end
 
@@ -42,7 +47,11 @@ defmodule KnitMaker.Events.Question do
     end
   end
 
-  def types() do
+  def q_types() do
     ~w(choices choices-2column choices-gradient pixel)
+  end
+
+  def v_types() do
+    ~w(emoji patterns-all patterns-1 patterns-2 patterns-3 patterns-4 gridfill gridfill-double textbars textbars-single border-count pixel skip)
   end
 end

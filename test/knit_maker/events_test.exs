@@ -42,7 +42,7 @@ defmodule KnitMaker.EventsTest do
         questions: [
           %{
             rank: 1,
-            config: %{"a" => 1},
+            q_config: %{"a" => 1},
             title: "x",
             type: "choices",
             name: "x"
@@ -53,7 +53,7 @@ defmodule KnitMaker.EventsTest do
       assert {:ok, %Event{} = event} = Events.create_event(valid_attrs)
       event = Repo.preload(event, :questions)
 
-      assert [%{config: %{"a" => 1}}] = event.questions
+      assert [%{q_config: %{"a" => 1}}] = event.questions
 
       assert %{name: "a", questions: [_]} = Event.raw(event)
     end
@@ -100,7 +100,7 @@ defmodule KnitMaker.EventsTest do
 
     import KnitMaker.EventsFixtures
 
-    @invalid_attrs %{code: nil, config: nil, description: nil, rank: nil, title: nil, type: nil}
+    @invalid_attrs %{code: nil, q_config: nil, description: nil, rank: nil, title: nil, type: nil}
 
     test "list_questions returns all questions" do
       event = event_fixture()
@@ -119,11 +119,12 @@ defmodule KnitMaker.EventsTest do
       valid_attrs = %{
         name: "some_code",
         code: "some code",
-        config: %{},
+        q_config: %{},
+        v_config: %{"a" => 1},
         description: "some description",
         rank: 42,
         title: "some title",
-        type: "choices"
+        q_type: "choices"
       }
 
       event = event_fixture()
@@ -131,11 +132,13 @@ defmodule KnitMaker.EventsTest do
 
       assert question.event_id == event.id
       assert question.code == "some code"
-      assert question.config == %{}
+      assert question.q_config == %{}
+      assert question.v_config == %{"a" => 1}
       assert question.description == "some description"
       assert question.rank == 42
       assert question.title == "some title"
-      assert question.type == "choices"
+      assert question.q_type == "choices"
+      assert question.v_type == "patterns-1"
     end
 
     test "create_question/1 with invalid data returns error changeset" do
@@ -158,11 +161,11 @@ defmodule KnitMaker.EventsTest do
 
       assert {:ok, %Question{} = question} = Events.update_question(question, update_attrs)
       assert question.code == "some updated code"
-      assert question.config == %{}
+      assert question.q_config == %{}
       assert question.description == "some updated description"
       assert question.rank == 43
       assert question.title == "some updated title"
-      assert question.type == "choices"
+      assert question.q_type == "choices"
     end
 
     test "update_question/2 with invalid data returns error changeset" do

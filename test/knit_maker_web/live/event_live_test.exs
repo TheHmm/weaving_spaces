@@ -9,16 +9,14 @@ defmodule KnitMakerWeb.EventLiveTest do
   @create_attrs %{
     slug: "some-slug",
     description: "some description",
-    image_url: "some image_url",
     name: "some name"
   }
   @update_attrs %{
     slug: "some-updated-slug",
     description: "some updated description",
-    image_url: "some updated image_url",
     name: "some updated name"
   }
-  @invalid_attrs %{description: nil, image_url: nil, name: nil}
+  @invalid_attrs %{description: nil, name: nil}
 
   defp create_event(_) do
     event = event_fixture()

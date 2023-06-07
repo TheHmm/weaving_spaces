@@ -6,8 +6,8 @@ defmodule KnitMaker.Visualizer do
 
   @final_width 60
 
-  @online_pattern from_string("10\n10\n10\n10")
-  @onsite_pattern from_string("1111111111\n0000000000")
+  @top_pattern from_string("10\n10\n10\n10")
+  @bottom_pattern from_string("1111111111\n0000000000")
 
   def render(event_id) do
     event = Events.get_event!(event_id)
@@ -16,48 +16,106 @@ defmodule KnitMaker.Visualizer do
     width = @final_width - 0
 
     # between patterns
-    sep = new(width, 1)
-    sep2 = sep |> border_top(from_string("10"))
+    sep = from_string("00\n01\n10\n00") |> repeat_h(div(width, 2))
 
-    question_lookup = Map.new(event.questions, &{&1.name, &1})
+    question_lookup = Map.new(event.questions, &{&1.id, &1})
     responses = Participants.grouped_responses_by_event(event_id)
 
     {event_date, event_title} = event_data(event, width)
 
-    concat_v([
-      stripes_count_h(width, responses["online"][0] || 0, @online_pattern),
-      sep,
-      event_title,
-      sep,
-      abstract_answer(responses["connected"], width),
-      sep,
-      sep2,
-      sep,
-      emotion_image(responses["emotion"], width),
-      sep,
-      sep2,
-      sep,
-      pixels(question_lookup["pixels"], width),
-      sep,
-      sep2,
-      sep,
-      event_date,
-      sep,
-      stripes_count_v(width, responses["online"][1] || 0, @onsite_pattern)
-    ])
+    {border_questions, other_questions} =
+      event.questions |> Enum.split_with(&(&1.v_type == "border-count"))
+
+    border_tops =
+      border_questions
+      |> Enum.map(fn q ->
+        [
+          stripes_count_h(
+            width,
+            responses[q.id][0] || 0,
+            safe_pattern(q.v_config["top_pattern"]) || @top_pattern
+          ),
+          sep
+        ]
+      end)
+
+    border_bottoms =
+      border_questions
+      |> Enum.map(fn q ->
+        [
+          sep,
+          stripes_count_v(
+            width,
+            responses[q.id][1] || 0,
+            safe_pattern(q.v_config["bottom_pattern"]) || @bottom_pattern
+          )
+        ]
+      end)
+      |> Enum.reverse()
+
+    other_questions =
+      other_questions
+      |> Enum.map(fn q ->
+        case q.v_type do
+          "emoji" -> emoji(responses[q.id], width)
+          "patterns-all" -> patterns_all(responses[q.id], width)
+          "pixel" -> pixel(q, width)
+          "gridfill" -> gridfill(responses[q.id], width, 24)
+          "gridfill-double" -> gridfill(responses[q.id], div(width, 2), 12) |> double()
+          _ -> nil
+        end
+      end)
+      |> Enum.reject(&is_nil/1)
+      |> Enum.intersperse(sep)
+
+    concat_v(
+      [
+        border_tops,
+        event_title,
+        sep,
+        other_questions,
+        sep,
+        event_date,
+        border_bottoms
+      ]
+      |> List.flatten()
+    )
   end
 
-  defp pixels(question, width) do
+  defp pixel(question, width) do
     Participants.get_pixels(question)
     |> double()
     |> fit(width, nil, bg: "0")
   end
 
-  defp emotion_image(nil, width), do: new(width, 1, "0")
+  defp emoji(nil, width), do: new(width, 1, "0")
 
-  defp emotion_image(response, width) do
+  defp emoji(response, width) do
     emotion = response |> max_answer() || 0
     from_file("knit_images/emotion#{emotion}.png") |> fit(width, nil, bg: "0")
+  end
+
+  defp gridfill(response, width, height) do
+    total = Map.values(response) |> Enum.sum()
+
+    base_pattern = from_string("10\n01")
+
+    pats =
+      Map.values(response)
+      |> Enum.map(fn v ->
+        ceil(v / total * width)
+      end)
+      |> Enum.with_index()
+      |> Enum.map(fn {w, idx} ->
+        pat = base_pattern |> stretch_v(idx + 1)
+
+        pat
+        |> repeat_v(div(height, pat.h))
+        |> repeat_h(div(w, pat.w))
+      end)
+
+    concat_h(pats)
+    |> fit(width, nil, bg: "0")
   end
 
   defp stripes_count_h(width, count, pat) do
@@ -140,9 +198,9 @@ defmodule KnitMaker.Visualizer do
     {date, title}
   end
 
-  defp abstract_answer(nil, width), do: new(width, 1, "0")
+  defp patterns_all(nil, width), do: new(width, 1, "0")
 
-  defp abstract_answer(lookup, width) do
+  defp patterns_all(lookup, width) do
     Enum.sort_by(lookup, &elem(&1, 1))
     |> Enum.reverse()
     |> Enum.with_index()
@@ -168,5 +226,14 @@ defmodule KnitMaker.Visualizer do
     end)
     |> concat_v()
     |> fit(width, nil, bg: "0")
+  end
+
+  defp safe_pattern(input) do
+    try do
+      Pat.from_string(input)
+    rescue
+      RuntimeError ->
+        nil
+    end
   end
 end

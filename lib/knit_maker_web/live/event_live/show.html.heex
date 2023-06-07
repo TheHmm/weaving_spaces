@@ -50,7 +50,8 @@
         <div><%= q.title %></div>
         <div class="text-xs text-neutral-400"><%= q.name %></div>
       </:col>
-      <:col :let={q} label="Type"><%= q.type %></:col>
+      <:col :let={q} label="Type"><%= q.q_type %></:col>
+      <:col :let={q} label="Visualization"><%= q.v_type %></:col>
     </.table>
   </div>
   <.link patch={~p"/events/#{@event}/question/add"}>
@@ -77,7 +78,7 @@
 </.modal>
 
 <.modal
-  :if={@live_action in [:edit_question, :config_question]}
+  :if={@live_action in [:edit_question, :config_question, :visualize_question]}
   id="event-modal"
   show
   on_cancel={JS.patch(~p"/events/#{@event}/questions")}

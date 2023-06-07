@@ -33,4 +33,5 @@ defmodule KnitMakerWeb.EventLive.Show do
   defp page_title(:add_question), do: "Add new Question"
   defp page_title(:edit_question), do: "Edit Question"
   defp page_title(:config_question), do: "Configure Question"
+  defp page_title(:visualize_question), do: "Configure Question visualize"
 end

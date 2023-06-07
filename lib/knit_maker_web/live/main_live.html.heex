@@ -29,13 +29,13 @@
       <div class="choices-box">
         <%= @question.title %>
 
-        <div class={"answers " <> @question.type}>
-          <%= if @question.type == "pixel" do %>
+        <div class={"answers " <> @question.q_type}>
+          <%= if @question.q_type == "pixel" do %>
             <div
               class="grid"
-              style={"grid-template-columns: " <> to_string(1..@question.config["width"] |> Enum.map(fn _ -> " 1fr" end))}
+              style={"grid-template-columns: " <> to_string(1..@question.q_config["width"] |> Enum.map(fn _ -> " 1fr" end))}
             >
-              <%= for y <- 0..(@question.config["height"]-1), x <- 0..(@question.config["height"]-1) do %>
+              <%= for y <- 0..(@question.q_config["height"]-1), x <- 0..(@question.q_config["height"]-1) do %>
                 <span
                   phx-click={JS.push("set-pixel", value: %{x: x, y: y, col: @pixel[{x, y}]})}
                   phx-hover={JS.push("set-coord", value: %{x: x, y: y, col: @pixel[{x, y}]})}
@@ -45,7 +45,7 @@
               <% end %>
             </div>
           <% else %>
-            <%= for {answer, index} <- Enum.with_index(@question.config["answers"] || []) do %>
+            <%= for {answer, index} <- Enum.with_index(@question.q_config["answers"] || []) do %>
               <label
                 phx-click={JS.push("set-answer", value: %{text: answer, value: index})}
                 class={

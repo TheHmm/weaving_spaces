@@ -36,8 +36,8 @@ defmodule KnitMaker.Participants do
     from(r in Response,
       join: q in assoc(r, :question),
       where: r.event_id == ^event_id,
-      select: {q.name, r.value, count(r.id)},
-      group_by: [q.name, r.value]
+      select: {q.id, r.value, count(r.id)},
+      group_by: [q.id, r.value]
     )
     |> Repo.all()
     |> Enum.group_by(&elem(&1, 0))
@@ -154,7 +154,7 @@ defmodule KnitMaker.Participants do
   end
 
   def get_pixels(%Question{} = q) do
-    get_pixels(q.id, q.config["width"], q.config["height"])
+    get_pixels(q.id, q.q_config["width"], q.q_config["height"])
   end
 
   def get_pixels(question_id, w, h) do

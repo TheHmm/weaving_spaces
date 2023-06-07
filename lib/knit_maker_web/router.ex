@@ -60,6 +60,7 @@ defmodule KnitMakerWeb.Router do
       live "/events/:id/question/add", EventLive.Show, :add_question
       live "/events/:id/question/:question_id/edit", EventLive.Show, :edit_question
       live "/events/:id/question/:question_id/config", EventLive.Show, :config_question
+      live "/events/:id/question/:question_id/visualize", EventLive.Show, :visualize_question
 
       live "/users/settings", UserSettingsLive, :edit
       live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
