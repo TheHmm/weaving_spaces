@@ -51,6 +51,7 @@ defmodule KnitMakerWeb.QuestionLive.FormComponent do
             />
           <% true -> %>
             <.input field={@form[:title]} type="text" label="Title" />
+            <.input field={@form[:description]} type="text" label="Description" />
             <div class="grid grid-cols-3 gap-4">
               <.input
                 field={@form[:q_type]}
@@ -66,8 +67,6 @@ defmodule KnitMakerWeb.QuestionLive.FormComponent do
               />
               <.input field={@form[:rank]} type="number" label="Rank" />
             </div>
-            <.input field={@form[:description]} type="text" label="Description" />
-            <.input field={@form[:name]} type="text" label="Name (for pattern generator)" />
         <% end %>
         <:actions>
           <.button phx-disable-with="Saving...">Save Question</.button>

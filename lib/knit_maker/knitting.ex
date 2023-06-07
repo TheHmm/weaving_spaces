@@ -2,6 +2,7 @@ defmodule KnitMaker.Knitting do
   use GenServer
   require Logger
 
+  alias KnitMaker.Events
   alias KnitMaker.Visualizer
 
   def start_link(event_id) do
@@ -55,6 +56,11 @@ defmodule KnitMaker.Knitting do
 
     def render(assigns) do
       ~H"""
+      <div>
+      <style>
+      .grid > span.c0 { background: <%= @event.knitting_bg || "#ffcc00" %> }
+      .grid > span.c1 { background: <%= @event.knitting_fg || "#111111" %> }
+      </style>
       <div
         class="grid"
         style={"grid-template-columns: " <> to_string(1..@pat.w |> Enum.map(fn _ -> " 1fr" end))}
@@ -63,13 +69,14 @@ defmodule KnitMaker.Knitting do
           <span class={"c" <> col}></span>
         <% end %>
       </div>
+      </div>
       """
     end
   end
 
   defp render(state) do
     pat = Visualizer.render(state.event_id)
-    rendered = LiveRender.render(%{pat: pat})
+    rendered = LiveRender.render(%{pat: pat, event: Events.get_event!(state.event_id)})
 
     state
     |> Map.put(:rendered, rendered)

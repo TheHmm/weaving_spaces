@@ -4,8 +4,6 @@ defmodule KnitMaker.Visualizer do
   alias KnitMaker.Participants
   alias KnitMaker.Events
 
-  @final_width 60
-
   @top_pattern from_string("10\n10\n10\n10")
   @bottom_pattern from_string("1111111111\n0000000000")
 
@@ -13,7 +11,7 @@ defmodule KnitMaker.Visualizer do
     event = Events.get_event!(event_id)
 
     # for padding
-    width = @final_width - 0
+    width = event.knitting_width
 
     # between patterns
     sep = from_string("00\n01\n10\n00") |> repeat_h(div(width, 2))

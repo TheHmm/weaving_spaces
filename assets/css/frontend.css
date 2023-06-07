@@ -92,13 +92,10 @@ html.frontend .choices-box .answers.pixel div.grid span.color-1:hover {
 }
 
 html.frontend div.knitting .grid {
-  background: #000278;
+  background: #000000;
 }
 html.frontend div.knitting .grid span {
   aspect-ratio: 1;
-}
-html.frontend div.knitting .grid span.c1 {
-  background: #be0044;
 }
 html.frontend div.knitting-before {
   background: linear-gradient(

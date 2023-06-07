@@ -5,9 +5,6 @@ defmodule KnitMaker.Events.Question do
   alias KnitMaker.Events.Event
 
   schema "questions" do
-    field(:name, :string)
-
-    field(:code, :string)
     field(:description, :string)
     field(:rank, :integer)
     field(:title, :string)
@@ -25,13 +22,12 @@ defmodule KnitMaker.Events.Question do
   @doc false
   def changeset(question, attrs) do
     question
-    |> cast(attrs, [:title, :name, :rank, :q_type, :v_type, :description, :code])
+    |> cast(attrs, [:title, :rank, :q_type, :v_type, :description])
     |> json_decode(:q_config, attrs["q_config"] || attrs[:q_config])
     |> json_decode(:v_config, attrs["v_config"] || attrs[:v_config])
-    |> validate_required([:title, :name, :rank, :v_type, :q_type])
+    |> validate_required([:title, :rank, :v_type, :q_type])
     |> validate_inclusion(:q_type, q_types())
     |> validate_inclusion(:v_type, v_types())
-    |> validate_format(:name, ~r/^[a-z][a-z0-9_]*$/)
   end
 
   defp json_decode(cs, field, value) do

@@ -100,7 +100,7 @@ defmodule KnitMaker.EventsTest do
 
     import KnitMaker.EventsFixtures
 
-    @invalid_attrs %{code: nil, q_config: nil, description: nil, rank: nil, title: nil, type: nil}
+    @invalid_attrs %{q_config: nil, description: nil, rank: nil, title: nil, type: nil}
 
     test "list_questions returns all questions" do
       event = event_fixture()
@@ -117,8 +117,6 @@ defmodule KnitMaker.EventsTest do
 
     test "create_question/1 with valid data creates a question" do
       valid_attrs = %{
-        name: "some_code",
-        code: "some code",
         q_config: %{},
         v_config: %{"a" => 1},
         description: "some description",
@@ -131,14 +129,13 @@ defmodule KnitMaker.EventsTest do
       assert {:ok, %Question{} = question} = Events.create_question_for_event(event, valid_attrs)
 
       assert question.event_id == event.id
-      assert question.code == "some code"
       assert question.q_config == %{}
       assert question.v_config == %{"a" => 1}
       assert question.description == "some description"
       assert question.rank == 42
       assert question.title == "some title"
       assert question.q_type == "choices"
-      assert question.v_type == "patterns-1"
+      assert question.v_type == "skip"
     end
 
     test "create_question/1 with invalid data returns error changeset" do
@@ -150,9 +147,7 @@ defmodule KnitMaker.EventsTest do
       question = question_fixture()
 
       update_attrs = %{
-        name: "updated_name",
-        code: "some updated code",
-        config: %{},
+        q_config: %{},
         description: "some updated description",
         rank: 43,
         title: "some updated title",
@@ -160,7 +155,6 @@ defmodule KnitMaker.EventsTest do
       }
 
       assert {:ok, %Question{} = question} = Events.update_question(question, update_attrs)
-      assert question.code == "some updated code"
       assert question.q_config == %{}
       assert question.description == "some updated description"
       assert question.rank == 43

@@ -22,6 +22,11 @@
     <:item title="Slug"><%= @event.slug %></:item>
     <:item title="Name"><%= @event.name %></:item>
     <:item title="Date"><%= @event.description %></:item>
+  <:item title="Knitting">
+      Width: <%= @event.knitting_width %>
+      Foreground: <span style={"background: " <> @event.knitting_fg}><%= @event.knitting_fg %></span>
+      Background: <span style={"background: " <> @event.knitting_bg}><%= @event.knitting_bg %></span>
+      </:item>
     <:item title="Participants"><%= @event_stats.participant_count %></:item>
     <:item title="Questions answered"><%= @event_stats.answer_count %></:item>
     <:item title="Actions">
@@ -48,7 +53,6 @@
       <:col :let={q} label="ID"><%= q.id %></:col>
       <:col :let={q} label="Question">
         <div><%= q.title %></div>
-        <div class="text-xs text-neutral-400"><%= q.name %></div>
       </:col>
       <:col :let={q} label="Type"><%= q.q_type %></:col>
       <:col :let={q} label="Visualization"><%= q.v_type %></:col>

@@ -258,6 +258,5 @@ defmodule PatTest do
 
     assert pixels.width == pat.w
     assert pixels.height == pat.h
-    IO.inspect(pixels.data, label: "pixels.data")
   end
 end

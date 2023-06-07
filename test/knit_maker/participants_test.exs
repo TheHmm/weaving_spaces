@@ -133,8 +133,7 @@ defmodule KnitMaker.ParticipantsTest do
       {:ok, _} = Participants.create_response(question, %{participant_id: "b", value: 42})
       {:ok, _} = Participants.create_response(question, %{participant_id: "c", value: 43})
 
-      assert %{participant_count: 3} =
-               Participants.get_event_stats(event.id) |> IO.inspect(label: "u")
+      assert %{participant_count: 3} = Participants.get_event_stats(event.id)
     end
 
     test "grouped_responses_by_event" do
@@ -147,7 +146,7 @@ defmodule KnitMaker.ParticipantsTest do
 
       g = Participants.grouped_responses_by_event(event.id)
 
-      assert %{"question" => %{42 => 2, 43 => 1}} = g
+      assert %{question.id => %{42 => 2, 43 => 1}} == g
     end
   end
 end
