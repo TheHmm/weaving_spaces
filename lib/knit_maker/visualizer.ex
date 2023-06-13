@@ -112,6 +112,7 @@ defmodule KnitMaker.Visualizer do
         pat
         |> repeat_v(div(height, pat.h))
         |> repeat_h(div(w, pat.w))
+        |> fit(w, height)
       end)
 
     concat_h(pats)
