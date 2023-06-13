@@ -95,6 +95,8 @@ defmodule KnitMaker.Visualizer do
     from_file("knit_images/emotion#{emotion}.png") |> fit(width, nil, bg: "0")
   end
 
+  defp gridfill(nil, width), do: new(width, 1, "0")
+
   defp gridfill(response, width, height) do
     total = Map.values(response) |> Enum.sum()
 
@@ -215,7 +217,11 @@ defmodule KnitMaker.Visualizer do
     |> fit(width, nil, bg: "0")
   end
 
-  defp textbars(q, responses, width, only_first \\ false) do
+  defp textbars(q, responses, width, only_first \\ false)
+
+  defp textbars(_q, nil, width, _only_first), do: new(width, 1, "0")
+
+  defp textbars(q, responses, width, only_first) do
     total = Enum.reduce(responses, 0, fn {_, c}, acc -> c + acc end)
 
     texts =
