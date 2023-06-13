@@ -60,6 +60,8 @@ defmodule KnitMaker.Visualizer do
           "pixel" -> pixel(q, width)
           "gridfill" -> gridfill(responses[q.id], width, 24)
           "gridfill-double" -> gridfill(responses[q.id], div(width, 2), 12) |> double()
+          "textbars" -> textbars(q, responses[q.id], width, false)
+          "textbar" -> textbars(q, responses[q.id], width, true)
           _ -> nil
         end
       end)
@@ -211,26 +213,50 @@ defmodule KnitMaker.Visualizer do
     |> fit(width, nil, bg: "0")
   end
 
-  defp answer_texts(nil, width), do: new(width, 1, "0")
+  defp textbars(q, responses, width, only_first \\ false) do
+    total = Enum.reduce(responses, 0, fn {_, c}, acc -> c + acc end)
 
-  defp answer_texts(lookup, width) do
-    Enum.sort_by(lookup, &elem(&1, 1))
-    |> Enum.reverse()
-    |> Enum.with_index()
-    |> Enum.map(fn {{answer, _value}, size} ->
-      answer_file = "knit_images/a#{answer}s#{size}.png"
+    texts =
+      q.q_config["answers"]
+      |> Enum.with_index()
+      |> Enum.map(fn {answer_text, idx} ->
+        percentage =
+          case total > 0 do
+            true -> (responses[idx] || 0) / total
+            false -> 0
+          end
 
-      from_file(answer_file)
-    end)
-    |> concat_v()
-    |> fit(width, nil, bg: "0")
+        {answer_text, percentage}
+      end)
+      |> Enum.sort_by(&(-elem(&1, 1)))
+      |> Enum.map(fn {answer_text, percentage} ->
+        text =
+          new_text(answer_text, font: :knit)
+          |> fit(width, nil, bg: "0", pos: :left)
+
+        if percentage > 0.0 do
+          bar = new(width, ceil(percentage * text.h), "0")
+
+          text |> overlay(bar, :bottom, :xor)
+        else
+          text
+        end
+      end)
+
+    if only_first do
+      List.first(texts)
+    else
+      texts
+      |> Enum.intersperse(new(width, 1, "0"))
+      |> concat_v()
+    end
   end
 
   defp safe_pattern(input) do
     try do
       Pat.from_string(input)
-    rescue
-      RuntimeError ->
+    catch
+      _, _ ->
         nil
     end
   end
