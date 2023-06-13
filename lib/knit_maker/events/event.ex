@@ -43,6 +43,6 @@ defmodule KnitMaker.Events.Event do
   end
 
   def mappify(event) do
-    Map.from_struct(event) |> Map.drop(~w(id inserted_at updated_at __meta__ event)a)
+    Map.from_struct(event) |> Map.drop(~w(id event_id inserted_at updated_at __meta__ event)a)
   end
 end

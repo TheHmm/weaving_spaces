@@ -153,11 +153,7 @@ defmodule KnitMakerWeb.MainLive do
     |> assign(
       :pixel,
       if question.q_type == "pixel" do
-        Participants.get_pixels(
-          question.id,
-          question.config["width"],
-          question.config["height"]
-        )
+        Participants.get_pixels(question)
       end
     )
   end

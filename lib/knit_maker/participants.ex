@@ -154,7 +154,7 @@ defmodule KnitMaker.Participants do
   end
 
   def get_pixels(%Question{} = q) do
-    get_pixels(q.id, q.q_config["width"], q.q_config["height"])
+    get_pixels(q.id, q.q_config["width"] || 30, q.q_config["height"] || 30)
   end
 
   def get_pixels(question_id, w, h) do
