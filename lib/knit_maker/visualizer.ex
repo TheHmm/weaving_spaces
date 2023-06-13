@@ -110,8 +110,8 @@ defmodule KnitMaker.Visualizer do
         pat = base_pattern |> stretch_v(idx + 1)
 
         pat
-        |> repeat_v(div(height, pat.h))
-        |> repeat_h(div(w, pat.w))
+        |> repeat_v(ceil(height / pat.h))
+        |> repeat_h(ceil(w / pat.w))
         |> fit(w, height)
       end)
 
