@@ -7,6 +7,7 @@ defmodule KnitMaker.Events.Event do
   schema "events" do
     field(:slug, :string)
     field(:name, :string)
+    field(:date, :string)
     field(:description, :string)
     field(:image_url, :string)
 
@@ -25,6 +26,7 @@ defmodule KnitMaker.Events.Event do
     |> cast(attrs, [
       :name,
       :slug,
+      :date,
       :description,
       :image_url,
       :knitting_bg,

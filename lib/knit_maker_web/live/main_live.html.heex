@@ -6,17 +6,30 @@
 
 <%= cond do %>
   <% @live_action == :start -> %>
-    <div class="columns-1 sm:columns-2 text-sm py-10 px-4">
-      <div>
+    <div class="grid gap-4 grid-cols-1 sm:grid-cols-2 py-10 px-4 text-sm">
+      <div class="w-full">
         <h3 class="uppercase tracking-wide mb-4">About the event</h3>
         <p>
-          Short introduction about the event or whatever else the organiser wants to write here. Ut ac tellus tortor. Donec ut sollicitudin massa, non ultricies nisi. Vestibulum blandit, turpis a euismod efficitur, nibh purus tristique leo, vel placerat orci tortor nec arcu. Suspendisse vestibulum arcu leo.
+          <.markdown>
+            <%= @event.description %>
+          </.markdown>
         </p>
       </div>
-      <div>
+
+      <div class="w-full">
         <h3 class="uppercase tracking-wide mb-4">About the app</h3>
         <p>
-          Short introduction about the premise of the webapp or whatever else the organiser wants to write here. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin quis eros a urna pulvinar condimentum id nec nisl. Donec auctor lacus leo, eget gravida justo venenatis non.
+          <.markdown>
+            Weaving spaces is a Toolkit for the Inbetween experiment, where
+            online and onsite audiences are interweaved in a tangible way,
+            with the assistance of a knitting machine. You will answer a
+            number of questions about your experience at the event. Your
+            answers will be translated into a knitting pattern that is
+            (sometimes) live-knitted into a scarf. This unique event scarf
+            presents the feelings, keywords, collaborative pixel drawings,
+            and abstract data visualisations of all visitors. More:
+            http://toolkitfortheinbetween.com/
+          </.markdown>
         </p>
       </div>
     </div>

@@ -21,7 +21,8 @@
   <.list>
     <:item title="Slug"><%= @event.slug %></:item>
     <:item title="Name"><%= @event.name %></:item>
-    <:item title="Date"><%= @event.description %></:item>
+    <:item title="Date"><%= @event.date %></:item>
+    <:item title="Description"><%= @event.description %></:item>
     <:item title="Knitting">
       Width: <%= @event.knitting_width %> Foreground:
       <span style={"background: " <> @event.knitting_fg}><%= @event.knitting_fg %></span>

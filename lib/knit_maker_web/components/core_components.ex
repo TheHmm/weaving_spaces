@@ -707,4 +707,15 @@ defmodule KnitMakerWeb.CoreComponents do
     </div>
     """
   end
+
+  def markdown(assigns) do
+    ~H"""
+    <%= render_slot(@inner_block)
+    |> Phoenix.HTML.Safe.to_iodata()
+    |> to_string()
+    |> String.trim()
+    |> Earmark.as_html!()
+    |> Phoenix.HTML.raw() %>
+    """
+  end
 end
