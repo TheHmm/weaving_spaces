@@ -10,7 +10,7 @@ processes = []
   destination="/data/knitmakerdb"
 
 [env]
-  PHX_HOST = "knitmaker.fly.dev"
+  PHX_HOST = "knitting.toolkitfortheinbetween.com"
   PORT = "8080"
   KNITMAKER_DB = "/data/knitmakerdb/prod.db"
 
