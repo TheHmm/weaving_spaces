@@ -32,18 +32,31 @@ defmodule KnitMaker.Participants do
     |> Repo.all()
   end
 
-  def grouped_responses_by_event(event_id) do
+  def grouped_responses_by_event(event_id, participant_id \\ nil) do
+    grouped_responses_by_event_query(event_id, participant_id)
+    |> Repo.all()
+    |> Enum.group_by(&elem(&1, 0))
+    |> Map.new(fn {q, group} ->
+      {q, group |> Map.new(fn {_q, k, v} -> {k, v} end)}
+    end)
+  end
+
+  def grouped_responses_by_event_query(event_id, nil) do
     from(r in Response,
       join: q in assoc(r, :question),
       where: r.event_id == ^event_id,
       select: {q.id, r.value, count(r.id)},
       group_by: [q.id, r.value]
     )
-    |> Repo.all()
-    |> Enum.group_by(&elem(&1, 0))
-    |> Map.new(fn {q, group} ->
-      {q, group |> Map.new(fn {_q, k, v} -> {k, v} end)}
-    end)
+  end
+
+  def grouped_responses_by_event_query(event_id, participant_id) do
+    from(r in Response,
+      join: q in assoc(r, :question),
+      where: r.event_id == ^event_id and r.participant_id == ^participant_id,
+      select: {q.id, r.value, count(r.id)},
+      group_by: [q.id, r.value]
+    )
   end
 
   def get_event_stats(event_id) do
@@ -153,21 +166,29 @@ defmodule KnitMaker.Participants do
     Response.changeset(response, attrs)
   end
 
-  def get_pixels(%Question{} = q) do
-    get_pixels(q.id, q.q_config["width"] || 30, q.q_config["height"] || 30)
+  def get_pixels(%Question{} = q, participant_id) do
+    get_pixels(q.id, q.q_config["width"] || 30, q.q_config["height"] || 30, participant_id)
   end
 
-  def get_pixels(question_id, w, h) do
+  def get_pixels(question_id, w, h, participant_id) do
     pixels =
-      from(r in Response,
-        where: r.question_id == ^question_id,
-        select: r.json["pixels"]
-      )
+      get_pixels_query(question_id, participant_id)
       |> Repo.all()
       |> Enum.flat_map(&Jason.decode!/1)
       |> Enum.sort()
       |> Map.new(fn [_date, x, y, p] -> {{x, y}, p} end)
 
     Pat.new(w, h) |> Pat.mass_put_pixels(pixels)
+  end
+
+  defp get_pixels_query(question_id, nil) do
+    from(r in Response, where: r.question_id == ^question_id, select: r.json["pixels"])
+  end
+
+  defp get_pixels_query(question_id, participant_id) do
+    from(r in Response,
+      where: r.question_id == ^question_id and r.participant_id == ^participant_id,
+      select: r.json["pixels"]
+    )
   end
 end

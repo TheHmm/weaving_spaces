@@ -1,7 +1,7 @@
 <img src={~p"/assets/img/main_logo.png"} class="w-100" />
 
 <div class="py-8">
-  <h1 class="text-4xl text-center tracking-widest uppercase"><%= @event.name %></h1>
+  <h1 class="text-4xl text-center tracking-wide uppercase"><%= @event.name %></h1>
 </div>
 
 <%= cond do %>
@@ -72,9 +72,19 @@
     </div>
 
     <div :if={!@next_question} class="mt-4 text-center">
-      <button class="large" phx-click="knit">Visualize</button>
+      <button class="large" phx-click="finish">Show my result</button>
     </div>
+  <% @live_action == :personal_result -> %>
+    <h1 class="text-2xl text-center tracking-wide uppercase">Personal result</h1>
+
+    <div class="knitting-before h-20"></div>
+    <div class="knitting">
+      <img class="w-full" src={"/image/event/#{@event.id}/#{@participant_id}"} />
+    </div>
+    <div class="knitting-before -scale-100 h-20"></div>
   <% @live_action == :result -> %>
+    <h1 class="text-2xl text-center tracking-wide uppercase">Overall result</h1>
+
     <div class="knitting-before h-20"></div>
     <div class="knitting">
       <%= @knitting %>

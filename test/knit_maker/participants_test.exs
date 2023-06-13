@@ -122,7 +122,7 @@ defmodule KnitMaker.ParticipantsTest do
 
       {:ok, _} = Participants.create_response(question, a)
 
-      assert %Pat{} = Participants.get_pixels(question.id, 10, 10)
+      assert %Pat{} = Participants.get_pixels(question.id, 10, 10, nil)
     end
 
     test "event_stats" do

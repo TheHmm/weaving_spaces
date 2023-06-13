@@ -2,22 +2,20 @@ defmodule KnitMaker.Visualizer do
   import Pat
 
   alias KnitMaker.Participants
-  alias KnitMaker.Events
+  alias KnitMaker.Events.Event
 
   @top_pattern from_string("10\n10\n10\n10")
   @bottom_pattern from_string("1111111111\n0000000000")
 
-  def render(event_id) do
-    event = Events.get_event!(event_id)
-
+  def render(%Event{} = event, participant_id) do
+    event = KnitMaker.Repo.preload(event, :questions)
     # for padding
     width = event.knitting_width
 
     # between patterns
-    sep = from_string("00\n01\n10\n00") |> repeat_h(div(width, 2))
+    sep = from_string("00\n01\n10\n00") |> repeat_h(ceil(width / 2)) |> fit(width, nil)
 
-    question_lookup = Map.new(event.questions, &{&1.id, &1})
-    responses = Participants.grouped_responses_by_event(event_id)
+    responses = Participants.grouped_responses_by_event(event.id, participant_id)
 
     {event_date, event_title} = event_data(event, width)
 
@@ -57,7 +55,7 @@ defmodule KnitMaker.Visualizer do
         case q.v_type do
           "emoji" -> emoji(responses[q.id], width)
           "patterns-all" -> patterns_all(responses[q.id], width)
-          "pixel" -> pixel(q, width)
+          "pixel" -> pixel(q, participant_id, width)
           "gridfill" -> gridfill(responses[q.id], width, 24)
           "gridfill-double" -> gridfill(responses[q.id], div(width, 2), 12) |> double()
           "textbars" -> textbars(q, responses[q.id], width, false)
@@ -82,8 +80,8 @@ defmodule KnitMaker.Visualizer do
     )
   end
 
-  defp pixel(question, width) do
-    Participants.get_pixels(question)
+  defp pixel(question, participant_id, width) do
+    Participants.get_pixels(question, participant_id)
     |> double()
     |> fit(width, nil, bg: "0")
   end
@@ -210,14 +208,15 @@ defmodule KnitMaker.Visualizer do
     |> Enum.map(fn {{answer, _value}, size} ->
       answer_file = "knit_images/a#{answer}s#{size}.png"
 
-      from_file(answer_file)
+      img = from_file(answer_file)
+
+      img
+      |> repeat_h(ceil(width / img.w))
+      |> fit(width, nil, bg: "0")
     end)
     |> Enum.intersperse(new(width, 1, "0"))
     |> concat_v()
-    |> fit(width, nil, bg: "0")
   end
-
-  defp textbars(q, responses, width, only_first \\ false)
 
   defp textbars(_q, nil, width, _only_first), do: new(width, 1, "0")
 

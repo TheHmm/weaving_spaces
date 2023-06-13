@@ -28,7 +28,9 @@ defmodule KnitMakerWeb.MainLive do
   end
 
   def mount(params, session, socket) do
-    {:ok, init_participant(socket, params, session)}
+    socket = init_participant(socket, params, session)
+
+    {:ok, socket}
   end
 
   @impl true
@@ -42,8 +44,8 @@ defmodule KnitMakerWeb.MainLive do
     {:noreply, redirect(socket, to: ~p"/#{socket.assigns.event.slug}/q/#{id}")}
   end
 
-  def handle_event("knit", %{}, socket) do
-    {:noreply, redirect(socket, to: ~p"/#{socket.assigns.event.slug}/knitting")}
+  def handle_event("finish", %{}, socket) do
+    {:noreply, redirect(socket, to: ~p"/#{socket.assigns.event.slug}/personal-knitting")}
   end
 
   def handle_event("download", %{}, socket) do
@@ -51,7 +53,7 @@ defmodule KnitMakerWeb.MainLive do
   end
 
   def handle_event("set-answer", args, socket) do
-    {:ok, r} =
+    {:ok, _} =
       Participants.create_response(
         socket.assigns.question,
         args |> Map.put("participant_id", socket.assigns.participant_id)
@@ -65,7 +67,7 @@ defmodule KnitMakerWeb.MainLive do
 
     question = socket.assigns.question
 
-    {:ok, r} =
+    {:ok, _} =
       Participants.create_response(
         socket.assigns.question,
         %{"participant_id" => socket.assigns.participant_id, "json" => %{"pixels" => [tuple]}},
@@ -125,8 +127,12 @@ defmodule KnitMakerWeb.MainLive do
   end
 
   defp reload_knitting(socket) do
-    {:ok, knitting} = KnitMaker.Knitting.get_knitting(socket.assigns.event.id)
-    assign(socket, :knitting, knitting)
+    if socket.assigns.live_action == :result do
+      {:ok, knitting} = KnitMaker.Knitting.get_knitting(socket.assigns.event.id)
+      assign(socket, :knitting, knitting)
+    else
+      socket
+    end
   end
 
   defp reload_participant_list(socket) do
@@ -153,7 +159,7 @@ defmodule KnitMakerWeb.MainLive do
     |> assign(
       :pixel,
       if question.q_type == "pixel" do
-        Participants.get_pixels(question)
+        Participants.get_pixels(question, nil)
       end
     )
   end

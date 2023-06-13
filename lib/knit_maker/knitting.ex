@@ -51,32 +51,15 @@ defmodule KnitMaker.Knitting do
     KnitMakerWeb.Presence.list("event-#{state.event_id}") |> Enum.count() > 0
   end
 
-  defmodule LiveRender do
-    use Phoenix.LiveComponent
-
-    def render(assigns) do
-      ~H"""
-      <div>
-      <style>
-      .grid > span.c0 { background: <%= @event.knitting_bg || "#ffcc00" %> }
-      .grid > span.c1 { background: <%= @event.knitting_fg || "#111111" %> }
-      </style>
-      <div
-        class="grid"
-        style={"grid-template-columns: " <> to_string(1..@pat.w |> Enum.map(fn _ -> " 1fr" end))}
-      >
-        <%= for row <- Pat.rows(@pat), col <- String.split(row, "", trim: true) do %>
-          <span class={"c" <> col}></span>
-        <% end %>
-      </div>
-      </div>
-      """
-    end
-  end
-
   defp render(state) do
-    pat = Visualizer.render(state.event_id)
-    rendered = LiveRender.render(%{pat: pat, event: Events.get_event!(state.event_id)})
+    event = Events.get_event!(state.event_id)
+    pat = Visualizer.render(event, nil)
+
+    rendered =
+      KnitMakerWeb.Components.Knitting.render(%{
+        pat: pat,
+        event: event
+      })
 
     state
     |> Map.put(:rendered, rendered)

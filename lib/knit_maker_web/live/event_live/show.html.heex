@@ -22,11 +22,12 @@
     <:item title="Slug"><%= @event.slug %></:item>
     <:item title="Name"><%= @event.name %></:item>
     <:item title="Date"><%= @event.description %></:item>
-  <:item title="Knitting">
-      Width: <%= @event.knitting_width %>
-      Foreground: <span style={"background: " <> @event.knitting_fg}><%= @event.knitting_fg %></span>
-      Background: <span style={"background: " <> @event.knitting_bg}><%= @event.knitting_bg %></span>
-      </:item>
+    <:item title="Knitting">
+      Width: <%= @event.knitting_width %> Foreground:
+      <span style={"background: " <> @event.knitting_fg}><%= @event.knitting_fg %></span>
+      Background:
+      <span style={"background: " <> @event.knitting_bg}><%= @event.knitting_bg %></span>
+    </:item>
     <:item title="Participants"><%= @event_stats.participant_count %></:item>
     <:item title="Questions answered"><%= @event_stats.answer_count %></:item>
     <:item title="Actions">
@@ -34,10 +35,7 @@
         <.button>Share event link</.button>
       </.link>
       <.link patch={~p"/#{@event.slug}/knitting"} phx-click={JS.push_focus()}>
-        <.button class="bg-zinc-500">Live knitting</.button>
-      </.link>
-      <.link href={~p"/image/event/#{@event}"} target="_blank">
-        <.button class="bg-zinc-500">.PNG</.button>
+        <.button class="bg-zinc-500">Overal knitting result</.button>
       </.link>
     </:item>
   </.list>

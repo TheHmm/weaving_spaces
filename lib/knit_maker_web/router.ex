@@ -74,10 +74,12 @@ defmodule KnitMakerWeb.Router do
     live_session :participant do
       live "/:slug", MainLive, :start
       live "/:slug/q/:question_id", MainLive, :question
+      live "/:slug/personal-knitting", MainLive, :personal_result
       live "/:slug/knitting", MainLive, :result
     end
 
     get "/image/event/:id", ImageController, :render
+    get "/image/event/:id/:participant_id", ImageController, :render
   end
 
   scope "/", KnitMakerWeb do
