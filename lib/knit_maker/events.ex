@@ -21,6 +21,10 @@ defmodule KnitMaker.Events do
     Repo.all(Event)
   end
 
+  def most_recent_event() do
+    from(e in Event, order_by: [desc: e.inserted_at], limit: 1) |> Repo.one()
+  end
+
   @doc """
   Gets a single event.
 
