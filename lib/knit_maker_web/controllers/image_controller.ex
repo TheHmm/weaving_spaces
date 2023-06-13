@@ -9,8 +9,6 @@ defmodule KnitMakerWeb.ImageController do
     {:ok, image_data} =
       event
       |> KnitMaker.Visualizer.render(params["participant_id"])
-      |> Pat.double()
-      |> Pat.double()
       |> Pat.to_pixels(%{"1" => event.knitting_fg, "0" => event.knitting_bg})
       |> Pixels.encode_png()
 
