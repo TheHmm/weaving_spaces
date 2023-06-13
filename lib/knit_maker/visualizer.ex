@@ -112,7 +112,7 @@ defmodule KnitMaker.Visualizer do
         pat
         |> repeat_v(ceil(height / pat.h))
         |> repeat_h(ceil(w / pat.w))
-        |> fit(w, height)
+        |> fit(w, height, pos: :top_left)
       end)
 
     concat_h(pats)
@@ -210,6 +210,7 @@ defmodule KnitMaker.Visualizer do
 
       from_file(answer_file)
     end)
+    |> Enum.intersperse(new(width, 1, "0"))
     |> concat_v()
     |> fit(width, nil, bg: "0")
   end
