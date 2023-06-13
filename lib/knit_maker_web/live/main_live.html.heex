@@ -79,7 +79,11 @@
 
     <div class="knitting-before h-20"></div>
     <div class="knitting">
-      <img class="w-full" src={"/image/event/#{@event.id}/#{@participant_id}"} />
+      <img
+        class="w-full"
+        src={"/image/event/#{@event.id}/#{@participant_id}"}
+        style="image-rendering: pixelated"
+      />
     </div>
     <div class="knitting-before -scale-100 h-20"></div>
   <% @live_action == :result -> %>
