@@ -95,7 +95,7 @@ defmodule KnitMaker.Visualizer do
     from_file("knit_images/emotion#{emotion}.png") |> fit(width, nil, bg: "0")
   end
 
-  defp gridfill(nil, width), do: new(width, 1, "0")
+  defp gridfill(nil, width, _), do: new(width, 1, "0")
 
   defp gridfill(response, width, height) do
     total = Map.values(response) |> Enum.sum()
