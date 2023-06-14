@@ -91,8 +91,9 @@ defmodule KnitMakerWeb.MainLive do
     {:noreply, reload_pixel(socket)}
   end
 
-  def handle_info(:reload_knitting, socket) do
-    {:noreply, reload_knitting(socket)}
+  def handle_info({:knitting, knitting}, socket) do
+    socket = assign(socket, :knitting, knitting)
+    {:noreply, socket}
   end
 
   def handle_info(%{event: "presence_diff"}, socket) do
@@ -112,27 +113,19 @@ defmodule KnitMakerWeb.MainLive do
       "participant_id" => participant_id
     })
 
-    :timer.send_interval(1000, :reload_knitting)
-
     Phoenix.PubSub.subscribe(KnitMaker.PubSub, "event-#{event.id}")
+    Phoenix.PubSub.subscribe(KnitMaker.PubSub, "knitting-#{event.id}")
+
+    KnitMaker.KnittingSupervisor.ensure_started(event.id)
 
     socket
     |> assign(:app, "frontend")
     |> assign(:event, event)
     |> assign(:questions, questions)
     |> assign(:participant_id, participant_id)
+    |> assign(:knitting, "Knitting loading..")
     |> reload_responses()
-    |> reload_knitting()
     |> reload_participant_list()
-  end
-
-  defp reload_knitting(socket) do
-    if socket.assigns.live_action == :result do
-      {:ok, knitting} = KnitMaker.Knitting.get_knitting(socket.assigns.event.id)
-      assign(socket, :knitting, knitting)
-    else
-      socket
-    end
   end
 
   defp reload_participant_list(socket) do

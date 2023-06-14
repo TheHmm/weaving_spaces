@@ -38,12 +38,22 @@ defmodule KnitMaker.Knitting do
   end
 
   def handle_info(:render, state) do
+    flush(:render)
+
     if people_connected?(state) do
       {:noreply, render(state)}
     else
       Logger.warn("Stopping knitting visualizer, nobody connected")
 
       {:stop, :normal, state}
+    end
+  end
+
+  defp flush(message) do
+    receive do
+      ^message -> flush(message)
+    after
+      0 -> :ok
     end
   end
 
@@ -60,6 +70,12 @@ defmodule KnitMaker.Knitting do
         pat: pat,
         event: event
       })
+
+    Phoenix.PubSub.broadcast(
+      KnitMaker.PubSub,
+      "knitting-#{state.event_id}",
+      {:knitting, rendered}
+    )
 
     state
     |> Map.put(:rendered, rendered)
