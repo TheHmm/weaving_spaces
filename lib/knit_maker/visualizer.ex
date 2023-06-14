@@ -193,7 +193,7 @@ defmodule KnitMaker.Visualizer do
       |> fit(width, nil, bg: "0")
 
     date =
-      new_text(event.description, font: :knit)
+      new_text(event.date, font: :knit)
       |> fit(width, nil, bg: "0")
 
     {date, title}
