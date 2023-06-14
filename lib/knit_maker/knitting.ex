@@ -11,7 +11,7 @@ defmodule KnitMaker.Knitting do
 
   def get_knitting(event_id) do
     {:ok, pid} = KnitMaker.KnittingSupervisor.ensure_started(event_id)
-    GenServer.call(pid, :get_knitting)
+    GenServer.call(pid, :get_knitting, 30_000)
   end
 
   def get_knitting_pat(event_id) do
