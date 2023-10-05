@@ -31,13 +31,15 @@ defmodule KnitMakerWeb.QuestionLive.FormComponent do
             link_to={~p"/events/#{@event}/question/#{@question}/visualize"}
           />
         </.tab_bar>
-
-
       <% end %>
 
-    <.simple_form for={@form} id="question-form" phx-target={@myself}
-    phx-change="validate"
-    phx-submit="save" >
+      <.simple_form
+        for={@form}
+        id="question-form"
+        phx-target={@myself}
+        phx-change="validate"
+        phx-submit="save"
+      >
         <%= cond do %>
           <% @action == :config_question -> %>
             <.rjsf field={@form[:q_config]} schema={q_config_schema(@form[:q_type])} label="Config" />
@@ -52,7 +54,7 @@ defmodule KnitMakerWeb.QuestionLive.FormComponent do
           <% true -> %>
             <.input field={@form[:title]} type="text" label="Title" />
             <.input field={@form[:description]} type="text" label="Description" />
-            <div class="grid grid-cols-3 gap-4">
+            <div class="grid grid-cols-2 gap-4">
               <.input
                 field={@form[:q_type]}
                 type="select"
@@ -65,7 +67,6 @@ defmodule KnitMakerWeb.QuestionLive.FormComponent do
                 label="Visualization"
                 options={KnitMaker.Events.Question.v_types()}
               />
-              <.input field={@form[:rank]} type="number" label="Rank" />
             </div>
         <% end %>
         <:actions>

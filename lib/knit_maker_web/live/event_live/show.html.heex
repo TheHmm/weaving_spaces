@@ -49,8 +49,9 @@
 
 <div :if={@live_action in [:questions, :add_question]} class="mb-4">
   <div class="mb-4">
-    <.table
+    <.sortable_table
       rows={@questions}
+      row_id={fn row -> "row-#{row.id}" end}
       id="questions"
       row_click={fn q -> JS.navigate(~p"/events/#{@event}/question/#{q}/edit") end}
     >
@@ -60,7 +61,7 @@
       </:col>
       <:col :let={q} label="Type"><%= q.q_type %></:col>
       <:col :let={q} label="Visualization"><%= q.v_type %></:col>
-    </.table>
+    </.sortable_table>
   </div>
   <.link patch={~p"/events/#{@event}/question/add"}>
     <.button>Add question</.button>
