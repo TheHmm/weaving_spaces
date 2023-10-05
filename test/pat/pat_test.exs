@@ -76,6 +76,19 @@ defmodule PatTest do
              target.data
   end
 
+  test "new_text with text wrapping" do
+    _target =
+      Pat.new_text("hi there how are you today?",
+        font: :sigi5b,
+        bg: " ",
+        width: 75,
+        align: :left
+        #        wrap_mode: :char
+      )
+
+    #    IO.puts(_target)
+  end
+
   test "repeat_h" do
     assert %Pat{data: "X X X X ", w: 8, h: 1} = Pat.from_string("X ") |> Pat.repeat_h(4)
     # Pat.from_string("XX \nX X") |> Pat.repeat_h(10) |> IO.puts()

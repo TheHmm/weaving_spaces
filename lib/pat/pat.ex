@@ -33,46 +33,58 @@ defmodule Pat do
     %Pat{w: w, h: h, data: data}
   end
 
+  defp wrap_text(text, font, max_width, wrap_mode) do
+    components =
+      case wrap_mode do
+        :char -> String.split(text, "", trim: true)
+        :word -> String.split(text, " ", trim: true) |> Enum.map(&(" " <> &1))
+      end
+
+    Enum.reduce(components, [], fn
+      component, [] ->
+        [String.trim_leading(component)]
+
+      component, [last_line | rest] ->
+        {w, _h} = Font.measure(font, last_line <> component)
+
+        case w <= max_width do
+          true ->
+            [last_line <> component | rest]
+
+          false ->
+            [String.trim_leading(component), last_line | rest]
+        end
+    end)
+    |> Enum.reverse()
+    |> Enum.intersperse("\n")
+    |> to_string()
+  end
+
   def new_text(text, opts \\ []) do
     font_name = Keyword.get(opts, :font, :sigi5b)
 
     bg = opts[:bg] || "1"
     font = Font.load(font_name, fg: opts[:fg] || "0", bg: bg, stride: opts[:stride])
 
+    text =
+      if opts[:width] != nil do
+        wrap_text(text, font, opts[:width], opts[:wrap_mode] || :word)
+      else
+        text
+      end
+
     pats =
       for line <- String.split(text, "\n") do
         {w, h} = Font.measure(font, line)
 
-        target = Pat.new(w, h, "1")
+        target = Pat.new(w, h, bg)
         Font.render(font, target, line, 0, 0)
       end
 
-    w = Enum.reduce(pats, 0, &max(&1.w, &2))
+    w = opts[:width] || Enum.reduce(pats, 0, &max(&1.w, &2))
 
     pats
-    |> Enum.map(fn pat ->
-      if pat.w < w do
-        d = w - pat.w
-
-        case opts[:align] do
-          :center ->
-            d1 = div(d, 2)
-            d2 = d - d1
-
-            pat
-            |> pad_left(d1, bg)
-            |> pad_right(d2, bg)
-
-          :right ->
-            pat |> pad_left(d, bg)
-
-          _ ->
-            pat |> pad_right(d, bg)
-        end
-      else
-        pat
-      end
-    end)
+    |> Enum.map(fn pat -> fit(pat, w, pat.h, bg: opts[:bg], pos: opts[:align]) end)
     |> Enum.intersperse(Pat.new(w, Keyword.get(opts, :line_pad, 1), bg))
     |> concat_v()
   end
