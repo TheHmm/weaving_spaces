@@ -20,6 +20,8 @@ defmodule KnitMaker.Events.Event do
     timestamps()
   end
 
+  @color_re ~r/^\#[a-f0-9]{6}$/i
+
   @doc false
   def changeset(event, attrs) do
     event
@@ -36,6 +38,8 @@ defmodule KnitMaker.Events.Event do
     |> cast_assoc(:questions)
     |> validate_required([:name, :slug])
     |> validate_format(:slug, ~r/^[a-z0-9-]+$/)
+    |> validate_format(:knitting_bg, @color_re, message: "is not a valid hex color")
+    |> validate_format(:knitting_fg, @color_re, message: "is not a valid hex color")
     |> unique_constraint(:slug, name: :events_slug)
   end
 

@@ -26,7 +26,9 @@ defmodule KnitMaker.EventsTest do
         slug: "some-slug",
         description: "some description",
         image_url: "some image_url",
-        name: "some name"
+        name: "some name",
+        knitting_bg: "#ffffff",
+        knitting_fg: "#fc0000"
       }
 
       assert {:ok, %Event{} = event} = Events.create_event(valid_attrs)

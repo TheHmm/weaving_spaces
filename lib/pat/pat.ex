@@ -552,4 +552,9 @@ defmodule Pat do
   defp color_to_binary(<<r::binary-size(2), g::binary-size(2), b::binary-size(2)>>) do
     <<String.to_integer(r, 16), String.to_integer(g, 16), String.to_integer(b, 16), 255>>
   end
+
+  defp color_to_binary(_) do
+    # error color = red
+    <<255, 0, 0, 255>>
+  end
 end

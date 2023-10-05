@@ -24,10 +24,15 @@
     <:item title="Date"><%= @event.date %></:item>
     <:item title="Description"><%= @event.description %></:item>
     <:item title="Knitting">
-      Width: <%= @event.knitting_width %> Foreground:
-      <span style={"background: " <> @event.knitting_fg}><%= @event.knitting_fg %></span>
+      Width: <span class="py-1 px-2 rounded bg-gray-200"><%= @event.knitting_width %></span>
+      Foreground:
+      <span class="py-1 px-2 rounded" style={"background: " <> @event.knitting_fg}>
+        <%= @event.knitting_fg %>
+      </span>
       Background:
-      <span style={"background: " <> @event.knitting_bg}><%= @event.knitting_bg %></span>
+      <span class="py-1 px-2 rounded" style={"background: " <> @event.knitting_bg}>
+        <%= @event.knitting_bg %>
+      </span>
     </:item>
     <:item title="Participants"><%= @event_stats.participant_count %></:item>
     <:item title="Questions answered"><%= @event_stats.answer_count %></:item>
