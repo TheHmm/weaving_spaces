@@ -188,13 +188,8 @@ defmodule KnitMaker.Visualizer do
   end
 
   defp event_data(event, width) do
-    title =
-      new_text(event.name, font: :knit)
-      |> fit(width, nil, bg: "0")
-
-    date =
-      new_text(event.date, font: :knit)
-      |> fit(width, nil, bg: "0")
+    title = new_text(event.name, font: :knit, width: width, bg: "0", align: :left)
+    date = new_text(event.date, font: :knit, width: width, bg: "0", align: :left)
 
     {date, title}
   end
