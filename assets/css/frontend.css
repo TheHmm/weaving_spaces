@@ -36,6 +36,19 @@ html.frontend .choices-box {
 html.frontend .choices-box > .answers {
   @apply p-6 rounded-lg bg-neutral-600 mt-5 text-left;
 }
+html.frontend .choices-box > .answers.open {
+  @apply p-0;
+}
+
+html.frontend .choices-box > .answers.open textarea {
+  width: 100%;
+  height: auto;
+  background: rgba(0, 0, 0, 0);
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  color: white;
+}
 
 html.frontend .choices-box > .answers.choices-gradient {
   background: linear-gradient(

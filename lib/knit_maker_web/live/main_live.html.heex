@@ -35,38 +35,50 @@
         <%= @question.title %>
 
         <div class={"answers " <> @question.q_type}>
-          <%= if @question.q_type == "pixel" do %>
-            <div
-              class="grid"
-              style={"grid-template-columns: " <> to_string(1..@question.q_config["width"] |> Enum.map(fn _ -> " 1fr" end))}
-            >
-              <%= for y <- 0..(@question.q_config["height"]-1), x <- 0..(@question.q_config["height"]-1) do %>
-                <span
-                  phx-click={JS.push("set-pixel", value: %{x: x, y: y, col: @pixel[{x, y}]})}
-                  phx-hover={JS.push("set-coord", value: %{x: x, y: y, col: @pixel[{x, y}]})}
-                  class={"color-" <> @pixel[{x, y}]}
-                >
-                </span>
-              <% end %>
-            </div>
-          <% else %>
-            <%= for {answer, index} <- Enum.with_index(@question.q_config["answers"] || []) do %>
-              <label
-                phx-click={JS.push("set-answer", value: %{text: answer, value: index})}
-                class={
-                  (@responses[@question.id] && @responses[@question.id].value == index &&
-                     "selected") ||
-                    ""
-                }
+          <%= cond do %>
+            <% @question.q_type == "pixel" -> %>
+              <div
+                class="grid"
+                style={"grid-template-columns: " <> to_string(1..@question.q_config["width"] |> Enum.map(fn _ -> " 1fr" end))}
               >
-                <input
-                  type="radio"
-                  name="q"
-                  checked={@responses[@question.id] && @responses[@question.id].value == index}
+                <%= for y <- 0..(@question.q_config["height"]-1), x <- 0..(@question.q_config["height"]-1) do %>
+                  <span
+                    phx-click={JS.push("set-pixel", value: %{x: x, y: y, col: @pixel[{x, y}]})}
+                    phx-hover={JS.push("set-coord", value: %{x: x, y: y, col: @pixel[{x, y}]})}
+                    class={"color-" <> @pixel[{x, y}]}
+                  >
+                  </span>
+                <% end %>
+              </div>
+            <% @question.q_type == "open" -> %>
+              <.form for={@open_form} phx-change="set-answer-text">
+                <.input
+                  phx-debounce="500"
+                  name="text"
+                  rows={8}
+                  type="textarea"
+                  field={@open_form[:text]}
+                  placeholder="Enter your answer here"
                 />
-                <%= answer %>
-              </label>
-            <% end %>
+              </.form>
+            <% true -> %>
+              <%= for {answer, index} <- Enum.with_index(@question.q_config["answers"] || []) do %>
+                <label
+                  phx-click={JS.push("set-answer", value: %{text: answer, value: index})}
+                  class={
+                    (@responses[@question.id] && @responses[@question.id].value == index &&
+                       "selected") ||
+                      ""
+                  }
+                >
+                  <input
+                    type="radio"
+                    name="q"
+                    checked={@responses[@question.id] && @responses[@question.id].value == index}
+                  />
+                  <%= answer %>
+                </label>
+              <% end %>
           <% end %>
         </div>
       </div>

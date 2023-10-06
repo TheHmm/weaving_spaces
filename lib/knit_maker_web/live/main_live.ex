@@ -17,11 +17,17 @@ defmodule KnitMakerWeb.MainLive do
 
     Phoenix.PubSub.subscribe(KnitMaker.PubSub, "live-question-#{question.id}")
 
+    open_form =
+      Participants.get_response(question, socket.assigns.participant_id)
+      |> Participants.change_response()
+      |> to_form()
+
     socket =
       socket
       |> assign(:question, question)
       |> assign(:prev_question, (idx > 0 && Enum.at(questions, idx - 1)) || nil)
       |> assign(:next_question, Enum.at(questions, idx + 1))
+      |> assign(:open_form, open_form)
       |> reload_pixel()
 
     {:ok, socket}
@@ -34,6 +40,14 @@ defmodule KnitMakerWeb.MainLive do
   end
 
   @impl true
+  def handle_event("set-answer-text", params, socket) do
+    params = params |> Map.put("participant_id", socket.assigns.participant_id)
+    {:ok, response} = Participants.create_response(socket.assigns.question, params)
+
+    open_form = response |> Participants.change_response() |> to_form()
+    {:noreply, socket |> assign(:open_form, open_form)}
+  end
+
   def handle_event("start", %{}, socket) do
     id = List.first(socket.assigns.questions).id
     {:noreply, redirect(socket, to: ~p"/#{socket.assigns.event.slug}/q/#{id}")}

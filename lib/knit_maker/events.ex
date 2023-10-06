@@ -160,7 +160,11 @@ defmodule KnitMaker.Events do
 
   """
   def create_question_for_event(%Event{} = event, attrs \\ %{}) do
-    %Question{event_id: event.id}
+    rank =
+      from(q in Question, where: q.event_id == ^event.id, select: max(q.rank))
+      |> Repo.one() || 0
+
+    %Question{event_id: event.id, rank: rank}
     |> Question.changeset(attrs)
     |> Repo.insert()
   end

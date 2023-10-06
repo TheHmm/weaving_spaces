@@ -44,7 +44,7 @@ defmodule KnitMaker.Events.Question do
   end
 
   def q_types() do
-    ~w(choices choices-2column choices-gradient pixel)
+    ~w(choices choices-2column choices-gradient pixel open)
   end
 
   def v_types() do

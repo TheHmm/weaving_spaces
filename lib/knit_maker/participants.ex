@@ -119,6 +119,19 @@ defmodule KnitMaker.Participants do
     end
   end
 
+  def get_response(%Question{} = question, participant_id) do
+    from(r in Response,
+      where:
+        r.event_id == ^question.event_id and r.question_id == ^question.id and
+          r.participant_id == ^participant_id
+    )
+    |> Repo.all()
+    |> case do
+      [] -> nil
+      [response] -> response
+    end
+  end
+
   @doc """
   Updates a response.
 
