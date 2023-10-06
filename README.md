@@ -32,3 +32,7 @@ Events can be created and edited on the admin interface:
 
 On the admin pages you can edit all aspects of each event, including creating
 questions and their corresponding visualizations.
+
+## Installation / running
+
+This is a standard [Phoenix LiveView](https://www.phoenixframework.org/) project and comes with a Dockerfile to run it anywhere. 
