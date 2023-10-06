@@ -62,7 +62,7 @@ defmodule KnitMakerWeb.ExportController do
         question =
           case question_lookup[response.question_id] do
             nil -> ""
-            q -> "#{q.title} (#{q.id})"
+            q -> q.title
           end
 
         sheet
@@ -77,8 +77,6 @@ defmodule KnitMakerWeb.ExportController do
     {:ok, {_, data}} =
       Workbook.append_sheet(%Workbook{}, sheet)
       |> Elixlsx.write_to_memory(filename)
-
-    IO.inspect(data, label: "data")
 
     conn
     |> put_resp_content_type("application/vnd.ms-excel")
