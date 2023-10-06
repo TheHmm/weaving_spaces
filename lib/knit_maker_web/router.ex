@@ -78,8 +78,9 @@ defmodule KnitMakerWeb.Router do
       live "/:slug/knitting", MainLive, :result
     end
 
-    get "/image/event/:id", ImageController, :render
-    get "/image/event/:id/:participant_id", ImageController, :render
+    get "/export/event/:id/image", ExportController, :image
+    get "/export/event/:id/image/:participant_id", ExportController, :image
+    get "/export/event/:id/excel", ExportController, :excel
   end
 
   scope "/", KnitMakerWeb do

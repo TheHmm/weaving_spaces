@@ -43,6 +43,9 @@
       <.link patch={~p"/#{@event.slug}/knitting"} phx-click={JS.push_focus()}>
         <.button class="bg-zinc-500">Overal knitting result</.button>
       </.link>
+      <.link href={~p"/export/event/#{@event.id}/excel"}>
+        <.button class="bg-zinc-500">Export</.button>
+      </.link>
     </:item>
   </.list>
 </div>

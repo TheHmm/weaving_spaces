@@ -22,6 +22,15 @@ defmodule KnitMaker.Participants do
     Repo.all(Response)
   end
 
+  def list_responses_by_event(event_id) do
+    from(r in Response,
+      where: r.event_id == ^event_id,
+      select: r,
+      order_by: [r.participant_id, r.inserted_at]
+    )
+    |> Repo.all()
+  end
+
   def list_responses_by_event_and_participant(event_id, participant_id) do
     from(r in Response,
       where:

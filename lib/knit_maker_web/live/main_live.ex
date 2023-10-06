@@ -63,7 +63,7 @@ defmodule KnitMakerWeb.MainLive do
   end
 
   def handle_event("download", %{}, socket) do
-    {:noreply, redirect(socket, to: ~p"/image/event/#{socket.assigns.event.id}")}
+    {:noreply, redirect(socket, to: ~p"/export/event/#{socket.assigns.event.id}/image")}
   end
 
   def handle_event("set-answer", args, socket) do
