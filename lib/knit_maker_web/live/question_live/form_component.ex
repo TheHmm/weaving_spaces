@@ -55,18 +55,31 @@ defmodule KnitMakerWeb.QuestionLive.FormComponent do
             <.input field={@form[:title]} type="text" label="Title" />
             <.input field={@form[:description]} type="text" label="Description" />
             <div class="grid grid-cols-2 gap-4">
-              <.input
-                field={@form[:q_type]}
-                type="select"
-                label="Type"
-                options={KnitMaker.Events.Question.q_types()}
-              />
-              <.input
-                field={@form[:v_type]}
-                type="select"
-                label="Visualization"
-                options={KnitMaker.Events.Question.v_types()}
-              />
+              <div class="flex flex-col gap-2">
+                <.input
+                  field={@form[:q_type]}
+                  type="select"
+                  label="Type"
+                  options={KnitMaker.Events.Question.q_types()}
+                />
+                <%= if @form[:q_type].value do %>
+                  <img src={"/assets/img/events/q_type_" <> @form[:q_type].value <> ".png"} />
+                <% end %>
+              </div>
+              <div class="flex flex-col gap-2">
+                <.input
+                  field={@form[:v_type]}
+                  type="select"
+                  label="Visualization"
+                  options={KnitMaker.Events.Question.v_types()}
+                />
+                <%= if @form[:v_type].value do %>
+                  <img
+                    src={"/assets/img/events/v_type_" <> @form[:v_type].value <> ".png"}
+                    style="image-rendering: pixelated;"
+                  />
+                <% end %>
+              </div>
             </div>
         <% end %>
         <:actions>
