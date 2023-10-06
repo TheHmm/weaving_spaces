@@ -5,32 +5,30 @@
 An interface for creating knittings as feedback on physical/virtual events
 (meetups, exhibitions, symposia, etc).
 
-## Data model
+## Event interface
 
-**user**
-is_admin: true/false
-is_anonymous: true/false
+Visitors can participate by browsing to an event's URL, and are greeted with a
+welcome page:
 
-**event**
+!(Event homepage)[images/event.jpg]
 
-- slug
-- title
-- description
-- image
+Next, they are presented a series of questions to be answered:
 
-**question**
+!(Event homepage)[images/question.jpg]
 
-- event_id
-- order (number)
-- type (enum)
-- config (map)
-- code (string)
+Finally, all of these questions help create a knitting pattern that looks similar to one of the following:
 
-**user_event_feedback**
+!(Knitting example)[images/knit1.png]
+!(Knitting example)[images/knit2.png]
 
-- event_id
-- user_id
-- question_id
-- timestamps
-- data?
-- value (number)
+## Admin interface
+
+Events can be created and edited on the admin interface:
+
+!(Admin interface)[images/admin.png]
+
+> Users that sign up need to be made administrator manually by setting the
+> `is_admin` flag in the database for the user.
+
+On the admin pages you can edit all aspects of each event, including creating
+questions and their corresponding visualizations.
