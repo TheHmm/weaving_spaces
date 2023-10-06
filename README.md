@@ -10,22 +10,22 @@ An interface for creating knittings as feedback on physical/virtual events
 Visitors can participate by browsing to an event's URL, and are greeted with a
 welcome page:
 
-!(Event homepage)[images/event.jpg]
+![Event homepage](images/event.jpg)
 
 Next, they are presented a series of questions to be answered:
 
-!(Event homepage)[images/question.jpg]
+![Event homepage](images/question.jpg)
 
 Finally, all of these questions help create a knitting pattern that looks similar to one of the following:
 
-!(Knitting example)[images/knit1.png]
-!(Knitting example)[images/knit2.png]
+![Knitting example](images/knit1.png)
+![Knitting example](images/knit2.png)
 
 ## Admin interface
 
 Events can be created and edited on the admin interface:
 
-!(Admin interface)[images/admin.png]
+![Admin interface](images/admin.png)
 
 > Users that sign up need to be made administrator manually by setting the
 > `is_admin` flag in the database for the user.
