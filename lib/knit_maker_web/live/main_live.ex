@@ -18,7 +18,8 @@ defmodule KnitMakerWeb.MainLive do
     Phoenix.PubSub.subscribe(KnitMaker.PubSub, "live-question-#{question.id}")
 
     open_form =
-      Participants.get_response(question, socket.assigns.participant_id)
+      (Participants.get_response(question, socket.assigns.participant_id) ||
+         %Participants.Response{})
       |> Participants.change_response()
       |> to_form()
 
