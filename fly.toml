@@ -10,9 +10,10 @@ processes = []
   destination="/data/knitmakerdb"
 
 [env]
-  PHX_HOST = "weavingspaces.toolkitfortheinbetween.com"
+  # PHX_HOST = "weavingspaces.toolkitfortheinbetween.com"
+  PHX_HOST = "knitmaker.fly.dev"
   PORT = "8080"
-  KNITMAKER_DB = "/data/knitmakerdb/prod.db"
+  KNITMAKER_DB = "/data/knitmakerdb/prod-new.db"
 
 [experimental]
   auto_rollback = true
